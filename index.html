@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Absensi Desa Tanjung Nyiur</title>
     
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href='data:application/manifest+json,{"name":"Absensi Desa Tanjung Nyiur","short_name":"Absen Desa","description":"Aplikasi Absensi Perangkat Desa Tanjung Nyiur","start_url":"./index.html","display":"standalone","background_color":"#e8f5e9","theme_color":"#2e7d32","orientation":"portrait","icons":[{"src":"logo_desa.png","sizes":"192x192","type":"image/png"},{"src":"logo_desa.png","sizes":"512x512","type":"image/png"}]}'>
     <meta name="theme-color" content="#2e7d32">
 
     <style>
@@ -356,7 +356,7 @@
             box-shadow: 0 4px 10px rgba(244,67,54,0.2);
         }
 
-        /* --- STYLING MODAL SELECTION LIST PERANGKAT DESA (TEMA APLIKASI) --- */
+        /* --- STYLING MODAL SELECTION LIST PERANGKAT DESA --- */
         .picker-box {
             background: #ffffff;
             width: 90%;
@@ -438,7 +438,7 @@
     
     <div id="login-screen">
         <div class="logo-container">
-            <img class="logo-desa" src="snapedit_1702450075051.png" onerror="this.src='https://via.placeholder.com/90?text=Logo'" alt="Logo Desa">
+            <img class="logo-desa" src="logo_desa.png" onerror="this.src='https://via.placeholder.com/90?text=Logo'" alt="Logo Desa">
         </div>
         <h2 style="color: var(--hijau-utama); font-size: 20px;">Akses Terbatas</h2>
         <p style="font-size: 12px; color: #666; margin-top: 5px;">Masukkan PIN Khusus Perangkat Desa</p>
@@ -451,7 +451,7 @@
     <div id="main-app">
         <div class="header">
             <div class="logo-container">
-                <img class="logo-desa" src="snapedit_1702450075051.png" onerror="this.src='https://via.placeholder.com/90?text=Logo'" alt="Logo Desa">
+                <img class="logo-desa" src="logo_desa.png" onerror="this.src='https://via.placeholder.com/90?text=Logo'" alt="Logo Desa">
             </div>
             <h1>Absensi Desa Tanjung Nyiur</h1>
             <p>Kecamatan Pulau Sembilan, Kabupaten Kotabaru<br>Provinsi Kalimantan Selatan</p>
@@ -527,7 +527,6 @@
     const canvas = document.getElementById('canvas');
     const hasilFoto = document.getElementById('hasil-foto');
 
-    // FUNGSI KUSTOM DROPDOWN PICKER MODAL
     function bukaPickerPerangkat() {
         document.getElementById('pickerModal').classList.add('active');
     }
@@ -540,7 +539,6 @@
         document.getElementById('perangkat').value = nilai;
         document.getElementById('selectTrigger').innerText = nilai;
         
-        // Atur efek visual pilihan item yang aktif
         const items = document.querySelectorAll('.picker-item');
         items.forEach(item => {
             if(item.innerText === nilai) {
@@ -551,7 +549,6 @@
         });
     }
 
-    // FUNGSI POPUP NOTIFIKASI KUSTOM
     function tampilkanAlert(judul, pesan, ikon, tipe, callback = null) {
         document.getElementById('alertTitle').innerText = judul;
         document.getElementById('alertMessage').innerText = pesan;
@@ -576,7 +573,6 @@
         }
     }
 
-    // 1. FUNGSI CEK PIN
     function cekAkses() {
         const inputUser = document.getElementById('pinInput').value;
         if(inputUser === PIN_RAHASIA) {
@@ -589,7 +585,6 @@
         }
     }
 
-    // 2. UPDATE JAM & TANGGAL DIGITAL
     function updateWaktu() {
         const sekarang = new Date();
         const jam = String(sekarang.getHours()).padStart(2, '0');
@@ -598,12 +593,11 @@
         document.getElementById('jam-digital').innerText = jam + ":" + menit + ":" + detik + " WITA";
 
         const opsi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('tanggal-digital').innerText = navigator.onLine ? sekarang.toLocaleDateString('id-ID', opsi) : "Mode Offline";
+        document.getElementById('tanggal-digital').innerText = sekarang.toLocaleDateString('id-ID', opsi);
     }
     setInterval(updateWaktu, 1000);
     updateWaktu();
 
-    // 3. AKTIFKAN KAMERA
     function aktifkanKamera() {
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
             .then(stream => {
@@ -615,7 +609,6 @@
             });
     }
 
-    // 4. ATUR TOMBOL TIPE ABSEN
     function setTipe(tipe) {
         tipeAbsen = tipe;
         const btnMasuk = document.getElementById('btn-masuk');
@@ -630,7 +623,6 @@
         }
     }
 
-    // 5. AMBIL FOTO & BEKUKAN LAYAR
     function ambilDanSimpan() {
         const perangkat = document.getElementById('perangkat').value;
 
@@ -664,7 +656,6 @@
         tampilkanAlert("Foto Berhasil", "Foto berhasil disimpan! Jika sudah pas, klik 'Kirim Data ke Google Sheets'.", "📸", "success");
     }
 
-    // 6. FUNGSI AMBIL ULANG FOTO
     function ulangFoto() {
         dataFotoBase64 = ""; 
         hasilFoto.style.display = "none";
@@ -675,7 +666,6 @@
         document.getElementById('label-kamera').innerText = "Kamera Absen";
     }
 
-    // 7. HUBUNGKAN KE GOOGLE SHEETS
     function kirimKeGoogleSheets() {
         const perangkat = document.getElementById('perangkat').value;
         
@@ -705,7 +695,6 @@
                 document.getElementById('selectTrigger').innerText = "-- Pilih Nama / Jabatan --";
                 document.getElementById('pinInput').value = "";
                 
-                // Reset highlight pilihan item kustom
                 const items = document.querySelectorAll('.picker-item');
                 items.forEach(item => item.classList.remove('selected'));
 
@@ -714,12 +703,12 @@
         }, 1500);
     }
 
-    // REGISTRASI SERVICE WORKER PWA OTOMATIS
+    // REGISTRASI SW DINAMIS
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
             navigator.serviceWorker.register("./sw.js")
-                .then(reg => console.log("Sistem Instalasi PWA Aktif!", reg))
-                .catch(err => console.log("Gagal mengaktifkan PWA", err));
+                .then(reg => console.log("SW OK", reg))
+                .catch(err => console.log("SW Gagal", err));
         });
     }
 </script>
