@@ -3,57 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Absensi Desa</title>
-    <link rel="manifest" href='data:application/manifest+json,{"name":"Absensi Desa","short_name":"Absen","start_url":"./index.html","display":"standalone","background_color":"#ffffff","theme_color":"#2e7d32","icons":[{"src":"https://raw.githubusercontent.com/rukmansyahlutfi22-code/1111177777777/main/Kabupaten%20Kotabaru.png","sizes":"512x512","type":"image/png"}]}'>
+    <title>Absensi Desa Tanjung Nyiur</title>
+    
+    <link rel="manifest" href='data:application/manifest+json,{"name":"Absensi Desa Tanjung Nyiur","short_name":"Absen Desa","start_url":"./index.html","display":"standalone","background_color":"#ffffff","theme_color":"#2e7d32","icons":[{"src":"https://raw.githubusercontent.com/rukmansyahlutfi22-code/1111177777777/main/Kabupaten%20Kotabaru.png","sizes":"512x512","type":"image/png"}]}'>
+    <meta name="theme-color" content="#2e7d32">
+
     <style>
-        :root { --utama: #2e7d32; --aksen: #ff4081; }
-        body { 
-            /* Latar belakang lebih hidup dengan gradasi */
-            background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
-            min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px;
-        }
-        .app-container { 
-            background: rgba(255, 255, 255, 0.95); /* Sedikit transparan agar terlihat efek glassmorphism */
-            width: 100%; max-width: 400px; padding: 30px; border-radius: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center;
-        }
-        /* Logo tanpa lingkaran luar */
-        .logo-desa { width: 120px; height: auto; margin-bottom: 20px; }
-        .btn-aksi { width: 100%; padding: 15px; border-radius: 15px; border: none; background: var(--utama); color: white; font-weight: bold; cursor: pointer; }
+        :root { --hijau-utama: #2e7d32; --hijau-muda: #e8f5e9; --pink-halus: #fce4ec; --pink-aksen: #ff4081; --teks-gelap: #333333; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: linear-gradient(135deg, var(--hijau-muda) 0%, var(--pink-halus) 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; }
+        .app-container { background: #ffffff; width: 100%; max-width: 450px; border-radius: 24px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 2px solid rgba(255, 64, 129, 0.15); position: relative; }
+        #login-screen { text-align: center; padding: 20px 10px; }
+        .pin-input { width: 80%; padding: 15px; font-size: 24px; letter-spacing: 10px; text-align: center; border: 2px solid var(--hijau-utama); border-radius: 12px; margin: 20px 0; outline: none; }
         #main-app { display: none; }
-        /* Kontrol Kamera */
-        .kamera-box { position: relative; width: 100%; height: 300px; background: #000; border-radius: 20px; overflow: hidden; margin-bottom: 10px; }
+        .logo-desa { width: 120px; height: 120px; margin-bottom: 20px; object-fit: contain; }
+        
+        /* Area Kamera */
+        .kamera-box { width: 100%; height: 340px; background: #222; border-radius: 16px; overflow: hidden; position: relative; margin-bottom: 20px; }
         #video { width: 100%; height: 100%; object-fit: cover; }
-        .btn-switch { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.5); color: white; border: none; padding: 8px 12px; border-radius: 10px; cursor: pointer; }
+        .btn-switch { position: absolute; top: 15px; right: 15px; background: var(--pink-aksen); color: white; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; z-index: 10; font-weight: bold; }
+        
+        .btn-aksi { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; background: var(--hijau-utama); color: white; margin-bottom: 10px; }
+        #hasil-foto, #canvas { display: none; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div id="login-screen">
-        <img src="https://raw.githubusercontent.com/rukmansyahlutfi22-code/1111177777777/main/Kabupaten%20Kotabaru.png" class="logo-desa">
-        <h3>Akses Terbatas</h3>
-        <input type="password" id="pinInput" placeholder="PIN" style="padding:15px; margin:20px 0; width:80%; text-align:center;">
-        <button class="btn-aksi" onclick="cekAkses()">Masuk</button>
+        <img class="logo-desa" src="https://raw.githubusercontent.com/rukmansyahlutfi22-code/1111177777777/main/Kabupaten%20Kotabaru.png" alt="Logo">
+        <h2>Akses Terbatas</h2>
+        <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="4" inputmode="numeric">
+        <button class="btn-aksi" onclick="cekAkses()">Masuk Aplikasi</button>
     </div>
 
     <div id="main-app">
-        <h4>Absensi Desa</h4>
+        <h3>Absensi Desa</h3>
         <div class="kamera-box">
+            <button class="btn-switch" onclick="switchKamera()">🔄 Balik</button>
             <video id="video" autoplay playsinline></video>
-            <button class="btn-switch" onclick="switchKamera()">🔄 Balik Kamera</button>
+            <img id="hasil-foto">
+            <canvas id="canvas"></canvas>
         </div>
-        <button class="btn-aksi" onclick="kirimData()">Simpan & Kirim</button>
+        <button class="btn-aksi" id="btn-potret" onclick="ambilDanSimpan()">💾 Simpan Data & Foto</button>
+        <button class="btn-aksi" style="background:#f44336; display:none;" id="btn-ulang-foto" onclick="ulangFoto()">🔄 Ambil Ulang</button>
     </div>
 </div>
 
 <script>
-    let currentMode = "user"; // Default kamera depan
+    let currentMode = "user"; // "user" atau "environment"
     const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const hasilFoto = document.getElementById('hasil-foto');
 
     function aktifkanKamera() {
+        if (video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+        }
         navigator.mediaDevices.getUserMedia({ video: { facingMode: currentMode } })
-            .then(stream => video.srcObject = stream);
+            .then(stream => {
+                video.srcObject = stream;
+                // Balikkan layar hanya jika kamera depan
+                video.style.transform = (currentMode === "user") ? "scaleX(-1)" : "none";
+            })
+            .catch(err => alert("Kamera gagal diakses!"));
     }
 
     function switchKamera() {
@@ -66,7 +79,33 @@
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'block';
             aktifkanKamera();
+        } else { alert("PIN Salah!"); }
+    }
+
+    function ambilDanSimpan() {
+        const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth; 
+        canvas.height = video.videoHeight;
+        
+        // Logika mirror canvas jika kamera depan
+        if(currentMode === "user") {
+            context.translate(canvas.width, 0);
+            context.scale(-1, 1);
         }
+        
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        hasilFoto.src = canvas.toDataURL('image/jpeg');
+        hasilFoto.style.display = "block"; 
+        video.style.display = "none";
+        document.getElementById('btn-potret').style.display = "none";
+        document.getElementById('btn-ulang-foto').style.display = "block";
+    }
+
+    function ulangFoto() {
+        hasilFoto.style.display = "none"; 
+        video.style.display = "block";
+        document.getElementById('btn-potret').style.display = "block";
+        document.getElementById('btn-ulang-foto').style.display = "none";
     }
 </script>
 </body>
