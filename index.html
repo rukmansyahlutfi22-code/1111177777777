@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Absensi Desa Tanjung Nyiur</title>
     
-    <link rel="manifest" href='data:application/manifest+json,{"name":"Absensi Desa Tanjung Nyiur","short_name":"Absen Desa","description":"Aplikasi Absensi Perangkat Desa","start_url":"./index.html","display":"standalone","background_color":"#e8f5e9","theme_color":"#2e7d32","orientation":"portrait","icons":[{"src":"logo_desa.png","sizes":"192x192","type":"image/png"},{"src":"logo_desa.png","sizes":"512x512","type":"image/png"}]}'>
+    <link rel="manifest" href='data:application/manifest+json,{"name":"Absensi Desa Tanjung Nyiur","short_name":"Absen Desa","description":"Aplikasi Absensi Perangkat Desa","start_url":"./index.html","display":"standalone","background_color":"#e8f5e9","theme_color":"#2e7d32","orientation":"portrait","icons":[{"src":"Kabupaten Kotabaru.png","sizes":"192x192","type":"image/png"},{"src":"Kabupaten Kotabaru.png","sizes":"512x512","type":"image/png"}]}'>
     <meta name="theme-color" content="#2e7d32">
 
     <style>
@@ -421,7 +421,7 @@
 <div class="app-container">
     <div id="login-screen">
         <div class="logo-container">
-            <img class="logo-desa" src="logo_desa.png" onerror="this.src='https://via.placeholder.com/90?text=Logo'" alt="Logo Desa">
+            <img class="logo-desa" src="Kabupaten Kotabaru.png" onerror="this.src='https://via.placeholder.com/90?text=Logo'" alt="Logo Desa">
         </div>
         <h2 style="color: var(--hijau-utama); font-size: 20px;">Akses Terbatas</h2>
         <p style="font-size: 12px; color: #666; margin-top: 5px;">Masukkan PIN Khusus Perangkat Desa</p>
@@ -432,7 +432,7 @@
     <div id="main-app">
         <div class="header">
             <div class="logo-container">
-                <img class="logo-desa" src="logo_desa.png" onerror="this.src='https://via.placeholder.com/90?text=Logo'" alt="Logo Desa">
+                <img class="logo-desa" src="Kabupaten Kotabaru.png" onerror="this.src='https://via.placeholder.com/90?text=Logo'" alt="Logo Desa">
             </div>
             <h1>Absensi Desa Tanjung Nyiur</h1>
             <p>Kecamatan Pulau Sembilan, Kabupaten Kotabaru<br>Provinsi Kalimantan Selatan</p>
@@ -592,7 +592,6 @@
         }, 1500);
     }
 
-    // REGISTRASI SERVICE WORKER AKTIF
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
             navigator.serviceWorker.register("./sw.js")
