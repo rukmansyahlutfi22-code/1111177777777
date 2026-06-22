@@ -506,7 +506,7 @@
 
 <script>
     const PIN_RAHASIA = "1234"; 
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzeXfHrcteb-wkp4gyyC3YLAuoM0P5iIcL9okCefPKTQMDNDjlZAq44qZ9LU0QVFpkJ/exec";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxkn0VSdN2wfNJ_vuN_4HytEs-XVBZzkJq01rXJLPLgNb0oiAbzC-YQVHQqJamy-ko1/exec";
 
     let tipeAbsen = "";
     let dataFotoBase64 = "";
@@ -588,19 +588,25 @@
     }
 
     function kirimKeGoogleSheets() {
-        if (!dataFotoBase64) { tampilkanAlert("Gagal Kirim", "Ambil foto dulu!", "⚠️", "error"); return; }
-        tampilkanAlert("Memproses Data", "Sedang mengirim data...", "⏳", "info");
-        fetch(WEB_APP_URL, {
-            method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'text/plain'},
-            body: JSON.stringify({ perangkat: document.getElementById('perangkat').value, tipe: tipeAbsen, foto: dataFotoBase64 })
-        });
-        setTimeout(() => {
-            tampilkanAlert("🚀 Sukses!", "Data absensi terkirim.", "✅", "success", () => {
-                window.location.reload();
-            });
-        }, 1500);
-    }
-
+    if (!dataFotoBase64) { alert("Ambil foto dulu!"); return; }
+    
+    // Pastikan URL di bawah ini adalah URL Web App terbaru Anda
+    fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            perangkat: document.getElementById('perangkat').value,
+            tipe: tipeAbsen,
+            foto: dataFotoBase64
+        })
+    })
+    .then(() => {
+        alert("Sukses! Data & Foto terkirim.");
+        window.location.reload();
+    })
+    .catch(err => alert("Gagal: " + err));
+}
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
             navigator.serviceWorker.register("./sw.js")
