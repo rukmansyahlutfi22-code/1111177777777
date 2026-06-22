@@ -432,8 +432,8 @@
         <div class="logo-container">
             <img class="logo-desa" src="Kabupaten Kotabaru.png" onerror="this.src='https://via.placeholder.com/90?text=Logo'" alt="Logo Desa">
         </div>
-        <h2 style="color: var(--hijau-utama); font-size: 20px;">Akses Terbatas</h2>
-        <p style="font-size: 12px; color: #666; margin-top: 5px;">Masukkan PIN Khusus Perangkat Desa</p>
+        <h2 style="color: var(--hijau-utama); font-size: 20px;">Kada Kawa Kelain Urang</h2>
+        <p style="font-size: 12px; color: #666; margin-top: 5px;">Masukkan PIN Khusus Perangkat Desa Desa Tanjung Nyiur</p>
         <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="4" inputmode="numeric">
         <button class="btn-aksi btn-simpan" onclick="cekAkses()">Masuk Aplikasi</button>
     </div>
@@ -452,7 +452,7 @@
             <div id="tanggal-digital">Memuat Waktu...</div>
             <div class="info-jadwal">
                 <div class="jadwal-item">Jam Masuk <span class="text-hijau">08:00 WITA</span></div>
-                <div class="jadwal-item">Batas Lambat <span class="text-pink">08:30 WITA</span></div>
+                <div class="jadwal-item">Terlambat Masuk <span class="text-pink">08:30 WITA</span></div>
             </div>
         </div>
 
@@ -486,10 +486,18 @@
         <div class="picker-header"><div class="picker-title">Pilih Perangkat Desa</div></div>
         <div class="picker-list">
             <div class="picker-item" onclick="pilihPerangkat('Rukmansyah - Sekretaris Desa')">Rukmansyah - Sekretaris Desa</div>
-            <div class="picker-item" onclick="pilihPerangkat('Ahmad - Kepala Desa')">Ahmad - Kepala Desa</div>
-            <div class="picker-item" onclick="pilihPerangkat('Siti - Sekretaris Desa')">Siti - Sekretaris Desa</div>
-            <div class="picker-item" onclick="pilihPerangkat('Budi - Kasi Pemerintahan')">Budi - Kasi Pemerintahan</div>
-            <div class="picker-item" onclick="pilihPerangkat('Iwan - Kaur Keuangan')">Iwan - Kaur Keuangan</div>
+            <div class="picker-item" onclick="pilihPerangkat('Zulkipli - Kepala Desa')">Zulkipli - Kepala Desa</div>
+            <div class="picker-item" onclick="pilihPerangkat('Karlina - Kaur Keuangan')">Karlina - Kaur Keuangan</div>
+            <div class="picker-item" onclick="pilihPerangkat('Hardiana - Kaur Perencanaan')">Hardiana - Kaur Perencanaan</div>
+            <div class="picker-item" onclick="pilihPerangkat('Selly Wardini - Kaur Tata Usaha & Umum')">Selly Wardini - Kaur Tata Usaha & Umum</div>
+            <div class="picker-item" onclick="pilihPerangkat('Alya Dewi - Kasi Pemerintahan')">Alya Dewi - Kasi Pemerintahan</div>
+            <div class="picker-item" onclick="pilihPerangkat('Saepul Rahma Dani - Kasi Kesejahteraan')">Saepul Rahma Dani - Kasi Kesejahteraan</div>
+            <div class="picker-item" onclick="pilihPerangkat('Sultan - Kepala Dusun I')">Sultan - Kepala Dusun I</div>
+            <div class="picker-item" onclick="pilihPerangkat('Andriano - Kepala Dusun II')">Andriano - Kepala Dusun II'</div>
+            <div class="picker-item" onclick="pilihPerangkat('Ahkmad Kamaluddin - Kepala Dusun III')">Ahkmad Kamaluddin - Kepala Dusun III</div>
+            <div class="picker-item" onclick="pilihPerangkat('Amina - Kepala Dusun IV')">Amina - Kepala Dusun IV</div>
+            <div class="picker-item" onclick="pilihPerangkat('ABD. Rahman - Kepala Dusun V')">ABD. Rahman - Kepala Dusun V</div>
+            <div class="picker-item" onclick="pilihPerangkat('Darhamsyah - Kepala Dusun VI')">Darhamsyah - Kepala Dusun VI</div>
         </div>
         <button class="picker-btn-selesai" onclick="tutupPickerPerangkat()">Selesai</button>
     </div>
@@ -505,7 +513,7 @@
 </div>
 
 <script>
-    const PIN_RAHASIA = "1234"; 
+    const PIN_RAHASIA = "2222"; 
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzd_xLqDh8yiw01UMmiCOXHpc3JBFrBb5a7km5jfFMiBvBOXtd1j7gqzW089YvzXI2H/exec";
 
     let tipeAbsen = "";
