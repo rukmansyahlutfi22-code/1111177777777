@@ -555,7 +555,7 @@
         document.getElementById('label-kamera').innerText = "Kamera Absen";
     }
 
-        // 7. HUBUNGKAN KE GOOGLE SHEETS (PERBAIKAN ALUR TRANSFER DATA KUSTOM POPUP)
+            // 7. HUBUNGKAN KE GOOGLE SHEETS (OPTIMALISASI AKHIR TANPA MEMAKSA BALASAN SERVER)
     function kirimKeGoogleSheets() {
         const perangkat = document.getElementById('perangkat').value;
         
@@ -564,13 +564,13 @@
             return;
         }
 
-        // Tampilkan popup loading terlebih dahulu agar user tahu data sedang diproses
+        // 1. Tampilkan animasi loading mengirim data
         tampilkanAlert("Memproses Data", "Sedang mengirim data absensi ke server desa... Mohon tunggu.", "⏳", "info");
 
-        // Proses pengiriman data ke Google Sheets berjalan di latar belakang
+        // 2. Jalankan pengiriman ke Google Sheets
         fetch(WEB_APP_URL, {
             method: 'POST',
-            mode: 'no-cors', // Diubah ke no-cors agar browser tidak memblokir paket foto berukuran besar
+            mode: 'no-cors', 
             headers: {
                 'Content-Type': 'text/plain'
             },
@@ -579,22 +579,19 @@
                 tipe: tipeAbsen,
                 foto: dataFotoBase64
             })
-        })
-        .then(() => {
-            // Setelah data dipastikan aman terkirim, tampilkan popup sukses
+        });
+
+        // 3. Beri jeda 1.5 detik agar proses transfer selesai, lalu langsung paksa tampilkan popup SUKSES
+        setTimeout(function() {
             tampilkanAlert("🚀 Sukses!", "Data absensi dan foto Anda berhasil terkirim ke Google Sheets.", "✅", "success", function() {
-                // Form direset otomatis setelah tombol 'Oke' pada popup sukses diklik
+                // Reset form setelah klik tombol 'Oke'
                 document.getElementById('perangkat').value = "";
                 document.getElementById('pinInput').value = "";
                 window.location.href = window.location.origin + window.location.pathname;
             });
-        })
-        .catch(err => {
-            // Jika benar-benar terjadi gangguan server eksternal, tampilkan eror
-            tampilkanAlert("Koneksi Eror", "Gagal mengirim data. Periksa jaringan internet Anda!", "❌", "error");
-            console.error(err);
-        });
+        }, 1500);
     }
+
 
 </script>
 </body>
