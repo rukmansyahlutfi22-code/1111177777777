@@ -39,9 +39,10 @@
             overflow: hidden;
             padding: 25px;
             border: 2px solid rgba(255, 64, 129, 0.15);
+            position: relative;
         }
 
-        /* --- SCREEN LOGIN PIN (KEAMANAN) --- */
+        /* --- SCREEN LOGIN PIN --- */
         #login-screen {
             text-align: center;
             padding: 20px 10px;
@@ -60,12 +61,11 @@
             color: var(--teks-gelap);
         }
 
-        /* --- SCREEN UTAMA (TERSEMBUNYI SEBELUM LOGIN) --- */
+        /* --- SCREEN UTAMA --- */
         #main-app {
             display: none;
         }
 
-        /* --- HEADER & KOTAK LOGO --- */
         .header {
             text-align: center;
             margin-bottom: 20px;
@@ -107,7 +107,6 @@
             line-height: 1.4;
         }
 
-        /* --- WIDGET JAM & INFO WAKTU --- */
         .waktu-card {
             background: linear-gradient(135deg, #ffffff 0%, var(--hijau-muda) 100%);
             border-radius: 16px;
@@ -144,7 +143,6 @@
         .text-hijau { color: var(--hijau-utama); }
         .text-pink { color: var(--pink-aksen); }
 
-        /* --- FORM INPUT --- */
         .form-group {
             margin-bottom: 15px;
         }
@@ -174,7 +172,6 @@
             background-color: #fff;
         }
 
-        /* --- PILIHAN TIPE ABSEN --- */
         .tipe-absen-container {
             display: flex;
             gap: 10px;
@@ -206,7 +203,6 @@
             border-color: var(--pink-aksen);
         }
 
-        /* --- KAMERA AREA (PORTRAIT) --- */
         .kamera-box {
             width: 100%;
             height: 340px;
@@ -229,7 +225,6 @@
             -webkit-transform: scaleX(-1);
         }
 
-        /* Komponen pratinjau hasil foto */
         #hasil-foto {
             width: 100%;
             height: 100%;
@@ -241,7 +236,6 @@
             display: none;
         }
 
-        /* --- TOMBOL AKSI --- */
         .btn-aksi {
             width: 100%;
             padding: 14px;
@@ -274,6 +268,82 @@
             border: 2px solid var(--pink-aksen);
         }
         .btn-kirim:hover { background: var(--pink-halus); }
+
+        /* --- STYLING MODAL NOTIFIKASI MODERN --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            width: 85%;
+            max-width: 350px;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+            border: 2px solid var(--hijau-muda);
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--teks-gelap);
+            margin-bottom: 10px;
+        }
+
+        .modal-message {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .modal-btn {
+            background: var(--hijau-utama);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(46,125,50,0.2);
+        }
+        
+        .modal-btn.btn-error {
+            background: #f44336;
+            box-shadow: 0 4px 10px rgba(244,67,54,0.2);
+        }
     </style>
 </head>
 <body>
@@ -293,7 +363,6 @@
     </div>
 
     <div id="main-app">
-        
         <div class="header">
             <div class="logo-container">
                 <img class="logo-desa" src="logo_desa.png" onerror="this.src='https://via.placeholder.com/90?text=Logo'" alt="Logo Desa">
@@ -326,7 +395,7 @@
         <label style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">Tipe Absensi</label>
         <div class="tipe-absen-container">
             <button type="button" class="btn-tipe" id="btn-masuk" onclick="setTipe('Masuk')">Jam Masuk</button>
-            <button type="button" class="btn-tipe" id="btn-pulang" onclick="setTipe('Pulang')">Jam Pulang</button>
+            <button type="button" class="btn-tipe" id="btn-pulang" onclick="setTipe('Jam Pulang')">Jam Pulang</button>
         </div>
 
         <label id="label-kamera" style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">Kamera Absen</label>
@@ -339,22 +408,53 @@
         <button class="btn-aksi btn-simpan" id="btn-potret" onclick="ambilDanSimpan()">💾 Simpan Data & Foto</button>
         <button class="btn-aksi btn-ulang" id="btn-ulang-foto" onclick="ulangFoto()">🔄 Ambil Ulang Foto</button>
         <button class="btn-aksi btn-kirim" onclick="kirimKeGoogleSheets()">🚀 Kirim Data ke Google Sheets</button>
+    </div>
+</div>
 
+<div id="customAlert" class="modal-overlay">
+    <div class="modal-box">
+        <span id="alertIcon" class="modal-icon">ℹ️</span>
+        <div id="alertTitle" class="modal-title">Pemberitahuan</div>
+        <div id="alertMessage" class="modal-message">Isi pesan di sini...</div>
+        <button id="alertBtn" class="modal-btn" onclick="tutupAlert()">Oke</button>
     </div>
 </div>
 
 <script>
-    // --- ATUR PIN DI SINI (Default: 1234) ---
     const PIN_RAHASIA = "1234"; 
-
-    // --- PASTE URL GOOGLE APPS SCRIPT ANDA DI SINI ---
-    const WEB_APP_URL = "MASUKKAN_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz_98lHscEee5G0uE_C66e6j0M4YQ4mUbeZ7bWkC2vY_ZfD7Z79xZ-7p2Vw6e_w_WzB/exec";
 
     let tipeAbsen = "";
     let dataFotoBase64 = "";
+    let callbackSetelahTutup = null;
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
     const hasilFoto = document.getElementById('hasil-foto');
+
+    // FUNGSI POPUP NOTIFIKASI KUSTOM GANTI ALERT BAWAAN
+    function tampilkanAlert(judul, pesan, ikon, tipe, callback = null) {
+        document.getElementById('alertTitle').innerText = judul;
+        document.getElementById('alertMessage').innerText = pesan;
+        document.getElementById('alertIcon').innerText = ikon;
+        
+        const btn = document.getElementById('alertBtn');
+        if (tipe === 'error') {
+            btn.className = "modal-btn btn-error";
+        } else {
+            btn.className = "modal-btn";
+        }
+        
+        callbackSetelahTutup = callback;
+        document.getElementById('customAlert').classList.add('active');
+    }
+
+    function tutupAlert() {
+        document.getElementById('customAlert').classList.remove('active');
+        if (callbackSetelahTutup) {
+            callbackSetelahTutup();
+            callbackSetelahTutup = null;
+        }
+    }
 
     // 1. FUNGSI CEK PIN
     function cekAkses() {
@@ -364,141 +464,10 @@
             document.getElementById('main-app').style.display = 'block';
             aktifkanKamera();
         } else {
-            alert("PIN Salah! Akses ditolak.");
+            tampilkanAlert("Akses Ditolak", "PIN yang Anda masukkan salah!", "❌", "error");
             document.getElementById('pinInput').value = "";
         }
     }
-
-    // 2. UPDATE JAM & TANGGAL DIGITAL (SUDAH DIPERBAIKI BERSIH)
-    function updateWaktu() {
-        const sekarang = new Date();
-        const jam = String(sekarang.getHours()).padStart(2, '0');
-        const menit = String(sekarang.getMinutes()).padStart(2, '0');
-        const detik = String(sekarang.getSeconds()).padStart(2, '0');
-        document.getElementById('jam-digital').innerText = `${jam}:${menit}:${detik} WITA`;
-
-        const opsi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('tanggal-digital').innerText = sekarang.toLocaleDateString('id-ID', opsi);
-    }
-    setInterval(updateWaktu, 1000);
-    updateWaktu();
-
-    // 3. AKTIFKAN KAMERA
-    function aktifkanKamera() {
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
-            .then(stream => {
-                video.srcObject = stream;
-            })
-            .catch(err => {
-                alert("Gagal membuka kamera. Pastikan izin kamera aktif!");
-                console.error(err);
-            });
-    }
-
-    // 4. ATUR TOMBOL TIPE ABSEN
-    function setTipe(tipe) {
-        tipeAbsen = tipe;
-        const btnMasuk = document.getElementById('btn-masuk');
-        const btnPulang = document.getElementById('btn-pulang');
-
-        if(tipe === 'Masuk') {
-            btnMasuk.classList.add('active-masuk');
-            btnPulang.classList.remove('active-pulang');
-        } else {
-            btnPulang.classList.add('active-pulang');
-            btnMasuk.classList.remove('active-masuk');
-        }
-    }
-
-    // 5. AMBIL FOTO & BEKUKAN LAYAR (TAMPILKAN HASIL FOTO)
-    function ambilDanSimpan() {
-        const perangkat = document.getElementById('perangkat').value;
-
-        if (!perangkat) {
-            alert("Silakan pilih Nama Perangkat Desa terlebih dahulu!");
-            return;
-        }
-        if (!tipeAbsen) {
-            alert("Silakan pilih Tipe Absen!");
-            return;
-        }
-
-        const context = canvas.getContext('2d');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        
-        context.translate(canvas.width, 0);
-        context.scale(-1, 1);
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        
-        // Simpan data gambar teks panjang
-        dataFotoBase64 = canvas.toDataURL('image/jpeg');
-        
-        // Tampilkan data ke elemen Gambar (Layar Membeku)
-        hasilFoto.src = dataFotoBase64;
-        hasilFoto.style.display = "block";
-        video.style.display = "none"; 
-
-        // Sesuaikan tombol aksinya
-        document.getElementById('btn-potret').style.display = "none";
-        document.getElementById('btn-ulang-foto').style.display = "block";
-        document.getElementById('label-kamera').innerText = "Hasil Foto Tangkapan (Beku)";
-
-        alert(`Foto berhasil diambil! Periksa foto Anda di atas. Jika sudah pas, klik 'Kirim Data ke Google Sheets'.`);
-    }
-
-    // 6. FUNGSI AMBIL ULANG FOTO (NYALAKAN KAMERA KEMBALI)
-    function ulangFoto() {
-        dataFotoBase64 = ""; 
-        hasilFoto.style.display = "none";
-        video.style.display = "block"; 
-
-        document.getElementById('btn-potret').style.display = "block";
-        document.getElementById('btn-ulang-foto').style.display = "none";
-        document.getElementById('label-kamera').innerText = "Kamera Absen";
-    }
-
-    // 7. HUBUNGKAN KE GOOGLE SHEETS
-    function kirimKeGoogleSheets() {
-        const perangkat = document.getElementById('perangkat').value;
-        
-        if (!dataFotoBase64 || !perangkat) {
-            alert("Silakan klik tombol 'Simpan Data & Foto' terlebih dahulu sampai layar membeku!");
-            return;
-        }
-
-        if (WEB_APP_URL === "MASUKKAN_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI") {
-            alert("Eror: Anda belum memasukkan URL Google Apps Script Anda pada kode HTML!");
-            return;
-        }
-
-        alert("Sedang mengirim data absensi ke server desa... Mohon tunggu sebentar.");
-
-        fetch(WEB_APP_URL, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'text/plain'
-            },
-            body: JSON.stringify({
-                perangkat: perangkat,
-                tipe: tipeAbsen,
-                foto: dataFotoBase64
-            })
-        })
-        .then(() => {
-            alert("🚀 Sukses! Data absensi dan foto Anda berhasil terkirim ke Google Sheets.");
-            document.getElementById('perangkat').value = "";
-            document.getElementById('pinInput').value = "";
-            location.reload();
-        })
-        .catch(err => {
-            alert("Gagal mengirim data. Periksa jaringan internet Anda!");
-            console.error(err);
-        });
-    }
-</script>
-
 
     // 2. UPDATE JAM & TANGGAL DIGITAL
     function updateWaktu() {
@@ -506,7 +475,7 @@
         const jam = String(sekarang.getHours()).padStart(2, '0');
         const menit = String(sekarang.getMinutes()).padStart(2, '0');
         const detik = String(sekarang.getSeconds()).padStart(2, '0');
-        document.getElementById('jam-digital').innerText = `${jam}:${menit}:${detik} WITA`;
+        document.getElementById('jam-digital').innerText = jam + ":" + menit + ":" + detik + " WITA";
 
         const opsi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('tanggal-digital').innerText = sekarang.toLocaleDateString('id-ID', opsi);
@@ -521,7 +490,7 @@
                 video.srcObject = stream;
             })
             .catch(err => {
-                alert("Gagal membuka kamera. Pastikan izin kamera aktif!");
+                tampilkanAlert("Kamera Gagal", "Pastikan izin kamera aktif!", "📷", "error");
                 console.error(err);
             });
     }
@@ -541,16 +510,16 @@
         }
     }
 
-    // 5. AMBIL FOTO & BEKUKAN LAYAR (TAMPILKAN HASIL FOTO)
+    // 5. AMBIL FOTO & BEKUKAN LAYAR
     function ambilDanSimpan() {
         const perangkat = document.getElementById('perangkat').value;
 
         if (!perangkat) {
-            alert("Silakan pilih Nama Perangkat Desa terlebih dahulu!");
+            tampilkanAlert("Data Belum Lengkap", "Silakan pilih Nama Perangkat Desa terlebih dahulu!", "⚠️", "warning");
             return;
         }
         if (!tipeAbsen) {
-            alert("Silakan pilih Tipe Absen!");
+            tampilkanAlert("Data Belum Lengkap", "Silakan pilih Tipe Absen!", "⚠️", "warning");
             return;
         }
 
@@ -562,23 +531,20 @@
         context.scale(-1, 1);
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         
-        // Simpan data gambar teks panjang
         dataFotoBase64 = canvas.toDataURL('image/jpeg');
         
-        // Tampilkan data ke elemen Gambar (Layar Membeku)
         hasilFoto.src = dataFotoBase64;
         hasilFoto.style.display = "block";
         video.style.display = "none"; 
 
-        // Sesuaikan tombol aksinya
         document.getElementById('btn-potret').style.display = "none";
         document.getElementById('btn-ulang-foto').style.display = "block";
         document.getElementById('label-kamera').innerText = "Hasil Foto Tangkapan (Beku)";
 
-        alert(`Foto berhasil diambil! Periksa foto Anda di atas. Jika sudah pas, klik 'Kirim Data ke Google Sheets'.`);
+        tampilkanAlert("Foto Berhasil", "Foto berhasil disimpan! Jika sudah pas, klik 'Kirim Data ke Google Sheets'.", "📸", "success");
     }
 
-    // 6. FUNGSI AMBIL ULANG FOTO (NYALAKAN KAMERA KEMBALI)
+    // 6. FUNGSI AMBIL ULANG FOTO
     function ulangFoto() {
         dataFotoBase64 = ""; 
         hasilFoto.style.display = "none";
@@ -594,16 +560,11 @@
         const perangkat = document.getElementById('perangkat').value;
         
         if (!dataFotoBase64 || !perangkat) {
-            alert("Silakan klik tombol 'Simpan Data & Foto' terlebih dahulu sampai layar membeku!");
+            tampilkanAlert("Gagal Kirim", "Silakan ambil foto terlebih dahulu!", "⚠️", "error");
             return;
         }
 
-        if (WEB_APP_URL === "MASUKKAN_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI") {
-            alert("Eror: Anda belum memasukkan URL Google Apps Script Anda pada kode HTML!");
-            return;
-        }
-
-        alert("Sedang mengirim data absensi ke server desa... Mohon tunggu sebentar.");
+        tampilkanAlert("Memproses Data", "Sedang mengirim data absensi ke server desa... Mohon tunggu.", "⏳", "info");
 
         fetch(WEB_APP_URL, {
             method: 'POST',
@@ -618,17 +579,18 @@
             })
         })
         .then(() => {
-            alert("🚀 Sukses! Data absensi dan foto Anda berhasil terkirim ke Google Sheets.");
-            document.getElementById('perangkat').value = "";
-            document.getElementById('pinInput').value = "";
-            location.reload();
+            tampilkanAlert("🚀 Sukses!", "Data absensi dan foto Anda berhasil terkirim ke Google Sheets.", "✅", "success", function() {
+                // Reset form & reload tanpa merusak halaman
+                document.getElementById('perangkat').value = "";
+                document.getElementById('pinInput').value = "";
+                window.location.href = window.location.origin + window.location.pathname;
+            });
         })
         .catch(err => {
-            alert("Gagal mengirim data. Periksa jaringan internet Anda!");
+            tampilkanAlert("Koneksi Eror", "Gagal mengirim data. Periksa jaringan internet Anda!", "❌", "error");
             console.error(err);
         });
     }
 </script>
-
 </body>
 </html>
