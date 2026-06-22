@@ -178,7 +178,7 @@
             border-color: var(--pink-aksen);
         }
 
-        /* --- KAMERA AREA --- */
+        /* --- KAMERA AREA (DENGAN EFEK CERMIN) --- */
         .kamera-box {
             width: 100%;
             height: 220px;
@@ -197,6 +197,9 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            /* Perbaikan: Membalikkan kamera secara horizontal agar pas seperti cermin */
+            transform: scaleX(-1);
+            -webkit-transform: scaleX(-1);
         }
 
         #canvas {
@@ -240,7 +243,7 @@
 <div class="app-container">
     
     <div class="header">
-        <img class="logo-desa" src="snapedit_1702450075051.png" alt="Logo Desa">
+        <img class="logo-desa" src="logo_desa.png" onerror="this.src='https://via.placeholder.com/85?text=Logo+Desa'" alt="Logo Desa">
         <h1>Absensi Desa Tanjung Nyiur</h1>
         <p>Kecamatan Pulau Sembilan, Kabupaten Kotabaru<br>Provinsi Kalimantan Selatan</p>
     </div>
@@ -332,7 +335,7 @@
         }
     }
 
-    // 4. AMBIL FOTO OTOMATIS & SIMPAN LOKAL
+    // 4. AMBIL FOTO & BALIKKAN KANVAS AGAR HASILNYA PAS (TIDAK TERBALIK)
     function ambilDanSimpan() {
         const perangkat = document.getElementById('perangkat').value;
 
@@ -345,13 +348,18 @@
             return;
         }
 
-        // Ambil gambar dari video ke canvas
         const context = canvas.getContext('2d');
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
+        
+        // Perbaikan: Membalikkan kanvas gambar sebelum memotret agar hasilnya sesuai tampilan cermin
+        context.translate(canvas.width, 0);
+        context.scale(-1, 1);
+        
+        // Gambar ulang video ke dalam kanvas yang sudah disesuaikan
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         
-        // Ubah foto jadi teks data (Base64)
+        // Simpan foto dalam string Base64
         dataFotoBase64 = canvas.toDataURL('image/jpeg');
 
         alert(`Berhasil! Data Absen milik [${perangkat}] telah tersimpan di sistem.`);
@@ -367,11 +375,6 @@
         }
 
         alert("Menghubungkan... Data siap dikirim ke Google Sheets.");
-        
-        /* Catatan Teknis untuk Anda:
-        Untuk benar-benar memasukkan data ini ke Google Sheets Anda secara real-time, 
-        Anda memerlukan skrip "Google Apps Script" (Web App URL) untuk ditempel di sini menggunakan metode 'fetch'.
-        */
     }
 </script>
 
