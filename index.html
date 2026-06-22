@@ -229,6 +229,14 @@
             -webkit-transform: scaleX(-1);
         }
 
+        /* Komponen pratinjau hasil foto */
+        #hasil-foto {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none; /* Sembunyikan di awal */
+        }
+
         #canvas {
             display: none;
         }
@@ -251,15 +259,20 @@
             background: var(--hijau-utama);
             color: white;
         }
-
         .btn-simpan:hover { background: #225c25; }
+
+        .btn-ulang {
+            background: #f44336;
+            color: white;
+            display: none; /* Muncul hanya saat foto sudah terambil */
+        }
+        .btn-ulang:hover { background: #d32f2f; }
 
         .btn-kirim {
             background: #fff;
             color: var(--pink-aksen);
             border: 2px solid var(--pink-aksen);
         }
-
         .btn-kirim:hover { background: var(--pink-halus); }
     </style>
 </head>
@@ -316,13 +329,15 @@
             <button type="button" class="btn-tipe" id="btn-pulang" onclick="setTipe('Pulang')">Jam Pulang</button>
         </div>
 
-        <label style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">Kamera Absen</label>
+        <label id="label-kamera" style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">Kamera Absen</label>
         <div class="kamera-box">
             <video id="video" autoplay playsinline></video>
+            <img id="hasil-foto" alt="Hasil Foto Absen">
             <canvas id="canvas"></canvas>
         </div>
 
-        <button class="btn-aksi btn-simpan" onclick="ambilDanSimpan()">💾 Simpan Data</button>
+        <button class="btn-aksi btn-simpan" id="btn-potret" onclick="ambilDanSimpan()">💾 Simpan Data & Foto</button>
+        <button class="btn-aksi btn-ulang" id="btn-ulang-foto" onclick="ulangFoto()">🔄 Ambil Ulang Foto</button>
         <button class="btn-aksi btn-kirim" onclick="kirimKeGoogleSheets()">🚀 Kirim Data ke Google Sheets</button>
 
     </div>
@@ -333,14 +348,15 @@
     const PIN_RAHASIA = "1234"; 
 
     // --- PASTE URL GOOGLE APPS SCRIPT ANDA DI SINI ---
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbybEHVsD0WF9XvK8JSyTV4phissjNjqm6JnuGuqYi11nyd04Ux16vAul_pbOZvW4lH6/exec";
+    const WEB_APP_URL = "MASUKKAN_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI";
 
     let tipeAbsen = "";
     let dataFotoBase64 = "";
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
+    const hasilFoto = document.getElementById('hasil-foto');
 
-    // 1. FUNGSI CEK PIN (KEMBALI AKTIF)
+    // 1. FUNGSI CEK PIN
     function cekAkses() {
         const inputUser = document.getElementById('pinInput').value;
         if(inputUser === PIN_RAHASIA) {
@@ -362,7 +378,7 @@
         document.getElementById('jam-digital').innerText = `${jam}:${menit}:${detik} WITA`;
 
         const opsi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('tanggal-digital').innerText = rollers = sekarang.toLocaleDateString('id-ID', opsi);
+        document.getElementById('tanggal-digital').innerText = sekarang.toLocaleDateString('id-ID', opsi);
     }
     setInterval(updateWaktu, 1000);
     updateWaktu();
@@ -394,7 +410,7 @@
         }
     }
 
-    // 5. AMBIL FOTO & SIMPAN LOKAL
+    // 5. AMBIL FOTO & BEKUKAN LAYAR (TAMPILKAN HASIL FOTO)
     function ambilDanSimpan() {
         const perangkat = document.getElementById('perangkat').value;
 
@@ -415,16 +431,39 @@
         context.scale(-1, 1);
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         
+        // Simpan data gambar teks panjang
         dataFotoBase64 = canvas.toDataURL('image/jpeg');
-        alert(`Berhasil! Data Absen milik [${perangkat}] telah tersimpan di sistem.`);
+        
+        // Tampilkan data ke elemen Gambar (Layar Membeku)
+        hasilFoto.src = dataFotoBase64;
+        hasilFoto.style.display = "block";
+        video.style.display = "none"; // Sembunyikan kamera live
+
+        // Sesuaikan tombol aksinya
+        document.getElementById('btn-potret').style.display = "none";
+        document.getElementById('btn-ulang-foto').style.display = "block";
+        document.getElementById('label-kamera').innerText = "Hasil Foto Tangkapan (Beku)";
+
+        alert(`Foto berhasil diambil! Periksa foto Anda di atas. Jika sudah pas, klik 'Kirim Data ke Google Sheets'.`);
     }
 
-    // 6. HUBUNGKAN KE GOOGLE SHEETS
+    // 6. FUNGSI AMBIL ULANG FOTO (NYALAKAN KAMERA KEMBALI)
+    function ulangFoto() {
+        dataFotoBase64 = ""; // Reset data lama
+        hasilFoto.style.display = "none";
+        video.style.display = "block"; // Munculkan kamera live kembali
+
+        document.getElementById('btn-potret').style.display = "block";
+        document.getElementById('btn-ulang-foto').style.display = "none";
+        document.getElementById('label-kamera').innerText = "Kamera Absen";
+    }
+
+    // 7. HUBUNGKAN KE GOOGLE SHEETS
     function kirimKeGoogleSheets() {
         const perangkat = document.getElementById('perangkat').value;
         
         if (!dataFotoBase64 || !perangkat) {
-            alert("Isi data absen dan klik 'Simpan Data' terlebih dahulu sampai foto terambil!");
+            alert("Silakan klik tombol 'Simpan Data & Foto' terlebih dahulu sampai layar membeku!");
             return;
         }
 
