@@ -485,9 +485,9 @@
     <div class="picker-box">
         <div class="picker-header"><div class="picker-title">Pilih Perangkat Desa</div></div>
         <div class="picker-list">
-            <div class="picker-item" onclick="pilihPerangkat('Rukmansyah - Sekretaris')">Rukmansyah - Sekretaris</div>
-            <div class="picker-item" onclick="pilihPerangkat('Zulkipli - Kepala Desa')">Zulkipli - Kepala Desa</div>
-            <div class="picker-item" onclick="pilihPerangkat('Karlina - Kaur Keuangan')">Karlina - Kaur Keuangan</div>
+            <div class="picker-item" onclick="pilihPerangkat('Rukmansyah - Sekretaris Desa')">Rukmansyah - Sekretaris Desa</div>
+            <div class="picker-item" onclick="pilihPerangkat('Ahmad - Kepala Desa')">Ahmad - Kepala Desa</div>
+            <div class="picker-item" onclick="pilihPerangkat('Siti - Sekretaris Desa')">Siti - Sekretaris Desa</div>
             <div class="picker-item" onclick="pilihPerangkat('Budi - Kasi Pemerintahan')">Budi - Kasi Pemerintahan</div>
             <div class="picker-item" onclick="pilihPerangkat('Iwan - Kaur Keuangan')">Iwan - Kaur Keuangan</div>
         </div>
@@ -601,12 +601,6 @@
         }, 1500);
     }
 
-    .then(() => {
-        alert("Sukses! Data & Foto terkirim.");
-        window.location.reload();
-    })
-    .catch(err => alert("Gagal: " + err));
-}
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
             navigator.serviceWorker.register("./sw.js")
