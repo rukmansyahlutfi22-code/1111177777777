@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Absensi Desa Tanjung Nyiur</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2e7d32">
+
     <style>
         /* --- TEMA WARNA: HIJAU & PINK HALUS --- */
         :root {
@@ -155,21 +159,28 @@
             margin-bottom: 6px;
         }
 
-        select {
+        /* --- STYLING TOMBOL PEMICU DROPDOWN KUSTOM --- */
+        .custom-select-trigger {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border-radius: 12px;
             border: 1.5px solid #ddd;
             font-size: 14px;
             color: var(--teks-gelap);
-            outline: none;
-            transition: 0.3s;
             background-color: #fafafa;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+            font-weight: 500;
         }
 
-        select:focus {
-            border-color: var(--hijau-utama);
-            background-color: #fff;
+        .custom-select-trigger:after {
+            content: '▼';
+            font-size: 10px;
+            color: #999;
         }
 
         .tipe-absen-container {
@@ -344,6 +355,81 @@
             background: #f44336;
             box-shadow: 0 4px 10px rgba(244,67,54,0.2);
         }
+
+        /* --- STYLING MODAL SELECTION LIST PERANGKAT DESA (TEMA APLIKASI) --- */
+        .picker-box {
+            background: #ffffff;
+            width: 90%;
+            max-width: 380px;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 3px solid var(--pink-halus);
+            transform: translateY(50px);
+            transition: 0.3s ease;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-overlay.active .picker-box {
+            transform: translateY(0);
+        }
+
+        .picker-header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--hijau-muda);
+        }
+
+        .picker-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--hijau-utama);
+            text-transform: uppercase;
+        }
+
+        .picker-list {
+            overflow-y: auto;
+            flex-grow: 1;
+            margin-bottom: 15px;
+            padding-right: 5px;
+        }
+
+        .picker-item {
+            width: 100%;
+            padding: 14px;
+            background: var(--hijau-muda);
+            color: var(--hijau-utama);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .picker-item:hover, .picker-item.selected {
+            background: var(--hijau-utama);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(46,125,50,0.2);
+        }
+
+        .picker-btn-selesai {
+            width: 100%;
+            padding: 12px;
+            background: var(--hijau-utama);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -381,15 +467,9 @@
         </div>
 
         <div class="form-group">
-            <label for="perangkat">Nama Perangkat & Jabatan</label>
-            <select id="perangkat">
-                <option value="">-- Pilih Nama / Jabatan --</option>
-                <option value="Adi Cipta - Kaur Umum">Adi Cipta - Kaur Umum</option>
-                <option value="Ahmad - Kepala Desa">Ahmad - Kepala Desa</option>
-                <option value="Siti - Sekretaris Desa">Siti - Sekretaris Desa</option>
-                <option value="Budi - Kasi Pemerintahan">Budi - Kasi Pemerintahan</option>
-                <option value="Iwan - Kaur Keuangan">Iwan - Kaur Keuangan</option>
-            </select>
+            <label>Nama Perangkat & Jabatan</label>
+            <div id="selectTrigger" class="custom-select-trigger" onclick="bukaPickerPerangkat()">-- Pilih Nama / Jabatan --</div>
+            <input type="hidden" id="perangkat" value="">
         </div>
 
         <label style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">Tipe Absensi</label>
@@ -408,6 +488,22 @@
         <button class="btn-aksi btn-simpan" id="btn-potret" onclick="ambilDanSimpan()">💾 Simpan Data & Foto</button>
         <button class="btn-aksi btn-ulang" id="btn-ulang-foto" onclick="ulangFoto()">🔄 Ambil Ulang Foto</button>
         <button class="btn-aksi btn-kirim" onclick="kirimKeGoogleSheets()">🚀 Kirim Data ke Google Sheets</button>
+    </div>
+</div>
+
+<div id="pickerModal" class="modal-overlay">
+    <div class="picker-box">
+        <div class="picker-header">
+            <div class="picker-title">Pilih Perangkat Desa</div>
+        </div>
+        <div class="picker-list">
+            <div class="picker-item" onclick="pilihPerangkat('Adi Cipta - Kaur Umum')">Adi Cipta - Kaur Umum</div>
+            <div class="picker-item" onclick="pilihPerangkat('Ahmad - Kepala Desa')">Ahmad - Kepala Desa</div>
+            <div class="picker-item" onclick="pilihPerangkat('Siti - Sekretaris Desa')">Siti - Sekretaris Desa</div>
+            <div class="picker-item" onclick="pilihPerangkat('Budi - Kasi Pemerintahan')">Budi - Kasi Pemerintahan</div>
+            <div class="picker-item" onclick="pilihPerangkat('Iwan - Kaur Keuangan')">Iwan - Kaur Keuangan</div>
+        </div>
+        <button class="picker-btn-selesai" onclick="tutupPickerPerangkat()">Selesai</button>
     </div>
 </div>
 
@@ -431,7 +527,31 @@
     const canvas = document.getElementById('canvas');
     const hasilFoto = document.getElementById('hasil-foto');
 
-    // FUNGSI POPUP NOTIFIKASI KUSTOM GANTI ALERT BAWAAN
+    // FUNGSI KUSTOM DROPDOWN PICKER MODAL
+    function bukaPickerPerangkat() {
+        document.getElementById('pickerModal').classList.add('active');
+    }
+
+    function tutupPickerPerangkat() {
+        document.getElementById('pickerModal').classList.remove('active');
+    }
+
+    function pilihPerangkat(nilai) {
+        document.getElementById('perangkat').value = nilai;
+        document.getElementById('selectTrigger').innerText = nilai;
+        
+        // Atur efek visual pilihan item yang aktif
+        const items = document.querySelectorAll('.picker-item');
+        items.forEach(item => {
+            if(item.innerText === nilai) {
+                item.classList.add('selected');
+            } else {
+                item.classList.remove('selected');
+            }
+        });
+    }
+
+    // FUNGSI POPUP NOTIFIKASI KUSTOM
     function tampilkanAlert(judul, pesan, ikon, tipe, callback = null) {
         document.getElementById('alertTitle').innerText = judul;
         document.getElementById('alertMessage').innerText = pesan;
@@ -478,7 +598,7 @@
         document.getElementById('jam-digital').innerText = jam + ":" + menit + ":" + detik + " WITA";
 
         const opsi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('tanggal-digital').innerText = sekarang.toLocaleDateString('id-ID', opsi);
+        document.getElementById('tanggal-digital').innerText = navigator.onLine ? sekarang.toLocaleDateString('id-ID', opsi) : "Mode Offline";
     }
     setInterval(updateWaktu, 1000);
     updateWaktu();
@@ -555,7 +675,7 @@
         document.getElementById('label-kamera').innerText = "Kamera Absen";
     }
 
-            // 7. HUBUNGKAN KE GOOGLE SHEETS (OPTIMALISASI AKHIR TANPA MEMAKSA BALASAN SERVER)
+    // 7. HUBUNGKAN KE GOOGLE SHEETS
     function kirimKeGoogleSheets() {
         const perangkat = document.getElementById('perangkat').value;
         
@@ -564,10 +684,8 @@
             return;
         }
 
-        // 1. Tampilkan animasi loading mengirim data
         tampilkanAlert("Memproses Data", "Sedang mengirim data absensi ke server desa... Mohon tunggu.", "⏳", "info");
 
-        // 2. Jalankan pengiriman ke Google Sheets
         fetch(WEB_APP_URL, {
             method: 'POST',
             mode: 'no-cors', 
@@ -581,18 +699,29 @@
             })
         });
 
-        // 3. Beri jeda 1.5 detik agar proses transfer selesai, lalu langsung paksa tampilkan popup SUKSES
         setTimeout(function() {
             tampilkanAlert("🚀 Sukses!", "Data absensi dan foto Anda berhasil terkirim ke Google Sheets.", "✅", "success", function() {
-                // Reset form setelah klik tombol 'Oke'
                 document.getElementById('perangkat').value = "";
+                document.getElementById('selectTrigger').innerText = "-- Pilih Nama / Jabatan --";
                 document.getElementById('pinInput').value = "";
+                
+                // Reset highlight pilihan item kustom
+                const items = document.querySelectorAll('.picker-item');
+                items.forEach(item => item.classList.remove('selected'));
+
                 window.location.href = window.location.origin + window.location.pathname;
             });
         }, 1500);
     }
 
-
+    // REGISTRASI SERVICE WORKER PWA OTOMATIS
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("./sw.js")
+                .then(reg => console.log("Sistem Instalasi PWA Aktif!", reg))
+                .catch(err => console.log("Gagal mengaktifkan PWA", err));
+        });
+    }
 </script>
 </body>
 </html>
