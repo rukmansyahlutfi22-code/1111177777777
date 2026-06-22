@@ -422,14 +422,45 @@
     }
 
     // HUBUNGKAN KE GOOGLE SHEETS
+        // 5. HUBUNGKAN KE GOOGLE SHEETS ASLI
     function kirimKeGoogleSheets() {
         const perangkat = document.getElementById('perangkat').value;
+        
         if (!dataFotoBase64 || !perangkat) {
             alert("Isi data absen dan klik 'Simpan Data' terlebih dahulu sampai foto terambil!");
             return;
         }
-        alert("Menghubungkan... Data siap dikirim ke Google Sheets.");
-    }
+
+        // GANTI LINK DI BAWAH INI DENGAN WEB APP URL YANG ANDA SALIN DARI LANGKAH 2
+        const WEB_APP_URL = "MASUKKAN_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI";
+
+        alert("Sedang mengirim data absensi ke server desa... Mohon tunggu sebentar.");
+
+        // Proses pengiriman data secara rahasia di latar belakang
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Menghindari masalah aturan keamanan browser cross-origin
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                perangkat: perangkat,
+                tipe: tipeAbsen,
+                foto: dataFotoBase64
+            })
+        })
+        .then(() => {
+            alert("🚀 Sukses! Data absensi dan foto Anda berhasil terkirim ke Google Sheets.");
+            // Reset form setelah sukses
+            document.getElementById('perangkat').value = "";
+            document.getElementById('pinInput').value = "";
+            location.reload(); // Muat ulang halaman untuk keamanan
+        })
+        .catch(err => {
+            alert("Gagal mengirim data. Periksa jaringan internet Anda!");
+            console.error(err);
+        });
+
 </script>
 
 </body>
