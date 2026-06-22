@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absensi Desa Tanjung Nyiur</title>
+    <style>
+        /* --- TEMA WARNA: HIJAU & PINK HALUS --- */
+        :root {
+            --hijau-utama: #2e7d32;
+            --hijau-muda: #e8f5e9;
+            --pink-halus: #fce4ec;
+            --pink-aksen: #ff4081;
+            --teks-gelap: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--hijau-muda) 0%, var(--pink-halus) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .app-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            padding: 25px;
+            border: 2px solid rgba(255, 64, 129, 0.15);
+        }
+
+        /* --- HEADER & LOGO --- */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-desa {
+            width: 85px;
+            height: 85px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #888;
+            border: 3px solid var(--hijau-utama);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            object-fit: cover;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            color: var(--hijau-utama);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+
+        .header p {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        /* --- WIDGET JAM & INFO WAKTU --- */
+        .waktu-card {
+            background: linear-gradient(135deg, #ffffff 0%, var(--hijau-muda) 100%);
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid rgba(46, 125, 50, 0.2);
+        }
+
+        #jam-digital {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--hijau-utama);
+        }
+
+        #tanggal-digital {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .info-jadwal {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px dashed rgba(0,0,0,0.1);
+            padding-top: 10px;
+            font-size: 11px;
+        }
+
+        .jadwal-item span {
+            display: block;
+            font-weight: bold;
+        }
+        .text-hijau { color: var(--hijau-utama); }
+        .text-pink { color: var(--pink-aksen); }
+
+        /* --- FORM INPUT --- */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--teks-gelap);
+            margin-bottom: 6px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1.5px solid #ddd;
+            font-size: 14px;
+            color: var(--teks-gelap);
+            outline: none;
+            transition: 0.3s;
+            background-color: #fafafa;
+        }
+
+        select:focus {
+            border-color: var(--hijau-utama);
+            background-color: #fff;
+        }
+
+        /* --- PILIHAN TIPE ABSEN (BUTTONS) --- */
+        .tipe-absen-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-tipe {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            background: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #666;
+        }
+
+        .btn-tipe.active-masuk {
+            background: var(--hijau-utama);
+            color: white;
+            border-color: var(--hijau-utama);
+        }
+
+        .btn-tipe.active-pulang {
+            background: var(--pink-aksen);
+            color: white;
+            border-color: var(--pink-aksen);
+        }
+
+        /* --- KAMERA AREA --- */
+        .kamera-box {
+            width: 100%;
+            height: 220px;
+            background: #222;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 20px;
+            border: 3px solid var(--pink-halus);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        /* --- TOMBOL AKSI --- */
+        .btn-aksi {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .btn-simpan {
+            background: var(--hijau-utama);
+            color: white;
+        }
+
+        .btn-simpan:hover { background: #225c25; }
+
+        .btn-kirim {
+            background: #fff;
+            color: var(--pink-aksen);
+            border: 2px solid var(--pink-aksen);
+        }
+
+        .btn-kirim:hover {
+            background: var(--pink-halus);
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <div class="header">
+        <img class="logo-desa" src="https://via.placeholder.com/85?text=Logo+Desa" alt="Logo Desa">
+        <h1>Absensi Desa Tanjung Nyiur</h1>
+        <p>Kecamatan Pulau Sembilan, Kabupaten Kotabaru<br>Provinsi Kalimantan Selatan</p>
+    </div>
+
+    <div class="waktu-card">
+        <div id="jam-digital">00:00:00</div>
+        <div id="tanggal-digital">Memuat Waktu...</div>
+        <div class="info-jadwal">
+            <div class="jadwal-item">Jam Masuk <span class="text-hijau">08:00 WITA</span></div>
+            <div class="jadwal-item">Batas Lambat <span class="text-pink">08:30 WITA</span></div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="perangkat">Nama Perangkat & Jabatan</label>
+        <select id="perangkat">
+            <option value="">-- Pilih Nama / Jabatan --</option>
+            <option value="Adi Cipta - Kaur Umum">Adi Cipta - Kaur Umum</option>
+            <option value="Ahmad - Kepala Desa">Ahmad - Kepala Desa</option>
+            <option value="Siti - Sekretaris Desa">Siti - Sekretaris Desa</option>
+            <option value="Budi - Kasi Pemerintahan">Budi - Kasi Pemerintahan</option>
+            <option value="Iwan - Kaur Keuangan">Iwan - Kaur Keuangan</option>
+        </select>
+    </div>
+
+    <label style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">Tipe Absensi</label>
+    <div class="tipe-absen-container">
+        <button type="button" class="btn-tipe" id="btn-masuk" onclick="setTipe('Masuk')">Jam Masuk</button>
+        <button type="button" class="btn-tipe" id="btn-pulang" onclick="setTipe('Pulang')">Jam Pulang</button>
+    </div>
+
+    <label style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">Kamera Absen</label>
+    <div class="kamera-box">
+        <video id="video" autoplay playsinline></video>
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <button class="btn-aksi btn-simpan" onclick="ambilDanSimpan()">💾 Simpan Data</button>
+    <button class="btn-aksi btn-kirim" onclick="kirimKeGoogleSheets()">🚀 Kirim Data ke Google Sheets</button>
+
+</div>
+
+<script>
+    let tipeAbsen = "";
+    let dataFotoBase64 = "";
+
+    // 1. UPDATE JAM & TANGGAL DIGITAL
+    function updateWaktu() {
+        const sekarang = new Date();
+        
+        // Format Jam
+        const jam = String(sekarang.getHours()).padStart(2, '0');
+        const menit = String(sekarang.getMinutes()).padStart(2, '0');
+        const detik = String(sekarang.getSeconds()).padStart(2, '0');
+        document.getElementById('jam-digital').innerText = `${jam}:${menit}:${detik} WITA`;
+
+        // Format Tanggal
+        const opsi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('tanggal-digital').innerText = sekarang.toLocaleDateString('id-ID', opsi);
+    }
+    setInterval(updateWaktu, 1000);
+    updateWaktu();
+
+    // 2. AKTIFKAN KAMERA HP / LAPTOP
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(err => {
+            alert("Gagal membuka kamera. Pastikan izin kamera diizinkan browser!");
+            console.error(err);
+        });
+
+    // 3. ATUR TOMBOL TIPE ABSEN
+    function setTipe(tipe) {
+        tipeAbsen = tipe;
+        const btnMasuk = document.getElementById('btn-masuk');
+        const btnPulang = document.getElementById('btn-pulang');
+
+        if(tipe === 'Masuk') {
+            btnMasuk.classList.add('active-masuk');
+            btnPulang.classList.remove('active-pulang');
+        } else {
+            btnPulang.classList.add('active-pulang');
+            btnMasuk.classList.remove('active-masuk');
+        }
+    }
+
+    // 4. AMBIL FOTO OTOMATIS & SIMPAN LOKAL
+    function ambilDanSimpan() {
+        const perangkat = document.getElementById('perangkat').value;
+
+        if (!perangkat) {
+            alert("Silakan pilih Nama Perangkat Desa terlebih dahulu!");
+            return;
+        }
+        if (!tipeAbsen) {
+            alert("Silakan pilih Tipe Absen (Jam Masuk / Jam Pulang)!");
+            return;
+        }
+
+        // Ambil gambar dari video ke canvas
+        const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        // Ubah foto jadi teks data (Base64)
+        dataFotoBase64 = canvas.toDataURL('image/jpeg');
+
+        alert(`Berhasil! Data Absen milik [${perangkat}] telah tersimpan di sistem.`);
+    }
+
+    // 5. HUBUNGKAN KE GOOGLE SHEETS
+    function kirimKeGoogleSheets() {
+        const perangkat = document.getElementById('perangkat').value;
+        
+        if (!dataFotoBase64 || !perangkat) {
+            alert("Isi data absen dan klik 'Simpan Data' terlebih dahulu sampai foto terambil!");
+            return;
+        }
+
+        alert("Menghubungkan... Data siap dikirim ke Google Sheets.");
+        
+        /* Catatan Teknis untuk Anda:
+        Untuk benar-benar memasukkan data ini ke Google Sheets Anda secara real-time, 
+        Anda memerlukan skrip "Google Apps Script" (Web App URL) untuk ditempel di sini menggunakan metode 'fetch'.
+        */
+    }
+</script>
+
+</body>
+</html>
