@@ -421,8 +421,7 @@
         alert(`Berhasil! Data Absen milik [${perangkat}] telah tersimpan di sistem.`);
     }
 
-    // HUBUNGKAN KE GOOGLE SHEETS
-        // 5. HUBUNGKAN KE GOOGLE SHEETS ASLI
+        // 5. HUBUNGKAN KE GOOGLE SHEETS ASLI (VERSI AMAN DARI BLOKIR)
     function kirimKeGoogleSheets() {
         const perangkat = document.getElementById('perangkat').value;
         
@@ -430,6 +429,38 @@
             alert("Isi data absen dan klik 'Simpan Data' terlebih dahulu sampai foto terambil!");
             return;
         }
+
+        // GANTI LINK DI BAWAH INI DENGAN WEB APP URL ANDA
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbybEHVsD0WF9XvK8JSyTV4phissjNjqm6JnuGuqYi11nyd04Ux16vAul_pbOZvW4lH6/exec";
+
+        alert("Sedang mengirim data absensi ke server desa... Mohon tunggu sebentar.");
+
+        // Menggunakan trik teks biasa (text/plain) agar tidak diblokir oleh aturan CORS browser
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            body: JSON.stringify({
+                perangkat: perangkat,
+                tipe: tipeAbsen,
+                foto: dataFotoBase64
+            })
+        })
+        .then(response => {
+            alert("🚀 Sukses! Data absensi dan foto Anda berhasil terkirim ke Google Sheets.");
+            // Reset form dan refresh halaman demi keamanan PIN
+            document.getElementById('perangkat').value = "";
+            document.getElementById('pinInput').value = "";
+            location.reload();
+        })
+        .catch(err => {
+            alert("Gagal mengirim data. Periksa jaringan internet Anda!");
+            console.error(err);
+        });
+    }
+
 
         // GANTI LINK DI BAWAH INI DENGAN WEB APP URL YANG ANDA SALIN DARI LANGKAH 2
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbybEHVsD0WF9XvK8JSyTV4phissjNjqm6JnuGuqYi11nyd04Ux16vAul_pbOZvW4lH6/exec";
