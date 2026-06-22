@@ -486,7 +486,7 @@
         <div class="picker-header"><div class="picker-title">Pilih Perangkat Desa</div></div>
         <div class="picker-list">
             <div class="picker-item" onclick="pilihPerangkat('Rukmansyah - Sekretaris')">Rukmansyah - Sekretaris</div>
-            <div class="picker-item" onclick="pilihPerangkat('Ahmad - Kepala Desa')">Ahmad - Kepala Desa</div>
+            <div class="picker-item" onclick="pilihPerangkat('Zulkipli - Kepala Desa')">Zulkipli - Kepala Desa</div>
             <div class="picker-item" onclick="pilihPerangkat('Siti - Sekretaris Desa')">Siti - Sekretaris Desa</div>
             <div class="picker-item" onclick="pilihPerangkat('Budi - Kasi Pemerintahan')">Budi - Kasi Pemerintahan</div>
             <div class="picker-item" onclick="pilihPerangkat('Iwan - Kaur Keuangan')">Iwan - Kaur Keuangan</div>
@@ -588,19 +588,19 @@
     }
 
     function kirimKeGoogleSheets() {
-    if (!dataFotoBase64) { alert("Ambil foto dulu!"); return; }
-    
-    // Pastikan URL di bawah ini adalah URL Web App terbaru Anda
-    fetch(WEB_APP_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            perangkat: document.getElementById('perangkat').value,
-            tipe: tipeAbsen,
-            foto: dataFotoBase64
-        })
-    })
+        if (!dataFotoBase64) { tampilkanAlert("Gagal Kirim", "Ambil foto dulu!", "⚠️", "error"); return; }
+        tampilkanAlert("Memproses Data", "Sedang mengirim data...", "⏳", "info");
+        fetch(WEB_APP_URL, {
+            method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'text/plain'},
+            body: JSON.stringify({ perangkat: document.getElementById('perangkat').value, tipe: tipeAbsen, foto: dataFotoBase64 })
+        });
+        setTimeout(() => {
+            tampilkanAlert("🚀 Sukses!", "Data absensi terkirim.", "✅", "success", () => {
+                window.location.reload();
+            });
+        }, 1500);
+    }
+
     .then(() => {
         alert("Sukses! Data & Foto terkirim.");
         window.location.reload();
