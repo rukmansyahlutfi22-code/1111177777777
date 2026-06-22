@@ -41,25 +41,54 @@
             border: 2px solid rgba(255, 64, 129, 0.15);
         }
 
-        /* --- HEADER & LOGO --- */
+        /* --- SCREEN LOGIN PIN (KEAMANAN) --- */
+        #login-screen {
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .pin-input {
+            width: 80%;
+            padding: 15px;
+            font-size: 24px;
+            letter-spacing: 10px;
+            text-align: center;
+            border: 2px solid var(--hijau-utama);
+            border-radius: 12px;
+            margin: 20px 0;
+            outline: none;
+            color: var(--teks-gelap);
+        }
+
+        /* --- SCREEN UTAMA (TERSEMBUNYI SEBELUM LOGIN) --- */
+        #main-app {
+            display: none;
+        }
+
+        /* --- HEADER & KOTAK LOGO --- */
         .header {
             text-align: center;
             margin-bottom: 20px;
         }
 
-        .logo-desa {
-            width: 85px;
-            height: 85px;
-            background: #f0f0f0;
-            border-radius: 50%;
+        /* Wadah Khusus Tempat Logo Desa */
+        .logo-container {
+            width: 90px;
+            height: 90px;
             margin: 0 auto 12px;
+            position: relative;
+        }
+
+        .logo-desa {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            color: #888;
             border: 3px solid var(--hijau-utama);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             object-fit: cover;
         }
 
@@ -146,7 +175,7 @@
             background-color: #fff;
         }
 
-        /* --- PILIHAN TIPE ABSEN (BUTTONS) --- */
+        /* --- PILIHAN TIPE ABSEN --- */
         .tipe-absen-container {
             display: flex;
             gap: 10px;
@@ -178,10 +207,10 @@
             border-color: var(--pink-aksen);
         }
 
-        /* --- KAMERA AREA (DENGAN EFEK CERMIN) --- */
+        /* --- KAMERA AREA (PORTRAIT) --- */
         .kamera-box {
             width: 100%;
-            height: 220px;
+            height: 340px;
             background: #222;
             border-radius: 16px;
             overflow: hidden;
@@ -197,7 +226,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Perbaikan: Membalikkan kamera secara horizontal agar pas seperti cermin */
             transform: scaleX(-1);
             -webkit-transform: scaleX(-1);
         }
@@ -233,94 +261,127 @@
             border: 2px solid var(--pink-aksen);
         }
 
-        .btn-kirim:hover {
-            background: var(--pink-halus);
-        }
+        .btn-kirim:hover { background: var(--pink-halus); }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     
-    <div class="header">
-        <img class="logo-desa" src="logo_desa.png" onerror="this.src='https://via.placeholder.com/85?text=Logo+Desa'" alt="Logo Desa">
-        <h1>Absensi Desa Tanjung Nyiur</h1>
-        <p>Kecamatan Pulau Sembilan, Kabupaten Kotabaru<br>Provinsi Kalimantan Selatan</p>
-    </div>
-
-    <div class="waktu-card">
-        <div id="jam-digital">00:00:00</div>
-        <div id="tanggal-digital">Memuat Waktu...</div>
-        <div class="info-jadwal">
-            <div class="jadwal-item">Jam Masuk <span class="text-hijau">08:00 WITA</span></div>
-            <div class="jadwal-item">Batas Lambat <span class="text-pink">08:30 WITA</span></div>
+    <div id="login-screen">
+        <div class="logo-container">
+            <img class="logo-desa" src="logo_desa.png" onerror="this.src='https://via.placeholder.com/90?text=Logo'" alt="Logo Desa">
         </div>
+        <h2 style="color: var(--hijau-utama); font-size: 20px;">Akses Terbatas</h2>
+        <p style="font-size: 12px; color: #666; margin-top: 5px;">Masukkan PIN Khusus Perangkat Desa</p>
+        
+        <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="4" inputmode="numeric">
+        
+        <button class="btn-aksi btn-simpan" onclick="cekAkses()">Masuk Aplikasi</button>
     </div>
 
-    <div class="form-group">
-        <label for="perangkat">Nama Perangkat & Jabatan</label>
-        <select id="perangkat">
-            <option value="">-- Pilih Nama / Jabatan --</option>
-            <option value="Adi Cipta - Kaur Umum">Adi Cipta - Kaur Umum</option>
-            <option value="Ahmad - Kepala Desa">Ahmad - Kepala Desa</option>
-            <option value="Siti - Sekretaris Desa">Siti - Sekretaris Desa</option>
-            <option value="Budi - Kasi Pemerintahan">Budi - Kasi Pemerintahan</option>
-            <option value="Iwan - Kaur Keuangan">Iwan - Kaur Keuangan</option>
-        </select>
+    <div id="main-app">
+        
+        <div class="header">
+            <div class="logo-container">
+                <img class="logo-desa" src="logo_desa.png" onerror="this.src='https://via.placeholder.com/90?text=Logo'" alt="Logo Desa">
+            </div>
+            <h1>Absensi Desa Tanjung Nyiur</h1>
+            <p>Kecamatan Pulau Sembilan, Kabupaten Kotabaru<br>Provinsi Kalimantan Selatan</p>
+        </div>
+
+        <div class="waktu-card">
+            <div id="jam-digital">00:00:00</div>
+            <div id="tanggal-digital">Memuat Waktu...</div>
+            <div class="info-jadwal">
+                <div class="jadwal-item">Jam Masuk <span class="text-hijau">08:00 WITA</span></div>
+                <div class="jadwal-item">Batas Lambat <span class="text-pink">08:30 WITA</span></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="perangkat">Nama Perangkat & Jabatan</label>
+            <select id="perangkat">
+                <option value="">-- Pilih Nama / Jabatan --</option>
+                <option value="Adi Cipta - Kaur Umum">Adi Cipta - Kaur Umum</option>
+                <option value="Ahmad - Kepala Desa">Ahmad - Kepala Desa</option>
+                <option value="Siti - Sekretaris Desa">Siti - Sekretaris Desa</option>
+                <option value="Budi - Kasi Pemerintahan">Budi - Kasi Pemerintahan</option>
+                <option value="Iwan - Kaur Keuangan">Iwan - Kaur Keuangan</option>
+            </select>
+        </div>
+
+        <label style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">Tipe Absensi</label>
+        <div class="tipe-absen-container">
+            <button type="button" class="btn-tipe" id="btn-masuk" onclick="setTipe('Masuk')">Jam Masuk</button>
+            <button type="button" class="btn-tipe" id="btn-pulang" onclick="setTipe('Pulang')">Jam Pulang</button>
+        </div>
+
+        <label style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">Kamera Absen</label>
+        <div class="kamera-box">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <button class="btn-aksi btn-simpan" onclick="ambilDanSimpan()">💾 Simpan Data</button>
+        <button class="btn-aksi btn-kirim" onclick="kirimKeGoogleSheets()">🚀 Kirim Data ke Google Sheets</button>
+
     </div>
-
-    <label style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">Tipe Absensi</label>
-    <div class="tipe-absen-container">
-        <button type="button" class="btn-tipe" id="btn-masuk" onclick="setTipe('Masuk')">Jam Masuk</button>
-        <button type="button" class="btn-tipe" id="btn-pulang" onclick="setTipe('Pulang')">Jam Pulang</button>
-    </div>
-
-    <label style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">Kamera Absen</label>
-    <div class="kamera-box">
-        <video id="video" autoplay playsinline></video>
-        <canvas id="canvas"></canvas>
-    </div>
-
-    <button class="btn-aksi btn-simpan" onclick="ambilDanSimpan()">💾 Simpan Data</button>
-    <button class="btn-aksi btn-kirim" onclick="kirimKeGoogleSheets()">🚀 Kirim Data ke Google Sheets</button>
-
 </div>
 
 <script>
+    // --- KUNCI PIN AMAN ---
+    // Di bawah ini PIN bawaannya adalah '1234'. Anda bebas mengubah angka di bawah ini!
+    const PIN_RAHASIA = "1234"; 
+
     let tipeAbsen = "";
     let dataFotoBase64 = "";
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
 
-    // 1. UPDATE JAM & TANGGAL DIGITAL
+    // FUNGSI CEK PIN
+    function cekAkses() {
+        const inputUser = document.getElementById('pinInput').value;
+        if(inputUser === PIN_RAHASIA) {
+            // Sembunyikan login, buka aplikasi utama
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            
+            // Nyalakan Kamera setelah login berhasil
+            aktifkanKamera();
+        } else {
+            alert("PIN Salah! Akses ditolak. Hanya perangkat desa yang diizinkan.");
+            document.getElementById('pinInput').value = "";
+        }
+    }
+
+    // UPDATE JAM & TANGGAL DIGITAL
     function updateWaktu() {
         const sekarang = new Date();
-        
-        // Format Jam
         const jam = String(sekarang.getHours()).padStart(2, '0');
         const menit = String(sekarang.getMinutes()).padStart(2, '0');
         const detik = String(sekarang.getSeconds()).padStart(2, '0');
         document.getElementById('jam-digital').innerText = `${jam}:${menit}:${detik} WITA`;
 
-        // Format Tanggal
         const opsi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('tanggal-digital').innerText = sekarang.toLocaleDateString('id-ID', opsi);
     }
     setInterval(updateWaktu, 1000);
     updateWaktu();
 
-    // 2. AKTIFKAN KAMERA HP / LAPTOP
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
+    // AKTIFKAN KAMERA
+    function aktifkanKamera() {
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                alert("Gagal membuka kamera. Pastikan izin kamera diaktifkan di browser!");
+                console.error(err);
+            });
+    }
 
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
-        .then(stream => {
-            video.srcObject = stream;
-        })
-        .catch(err => {
-            alert("Gagal membuka kamera. Pastikan izin kamera diizinkan browser!");
-            console.error(err);
-        });
-
-    // 3. ATUR TOMBOL TIPE ABSEN
+    // ATUR TOMBOL TIPE ABSEN
     function setTipe(tipe) {
         tipeAbsen = tipe;
         const btnMasuk = document.getElementById('btn-masuk');
@@ -335,7 +396,7 @@
         }
     }
 
-    // 4. AMBIL FOTO & BALIKKAN KANVAS AGAR HASILNYA PAS (TIDAK TERBALIK)
+    // AMBIL FOTO & SIMPAN LOKAL
     function ambilDanSimpan() {
         const perangkat = document.getElementById('perangkat').value;
 
@@ -352,28 +413,21 @@
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         
-        // Perbaikan: Membalikkan kanvas gambar sebelum memotret agar hasilnya sesuai tampilan cermin
         context.translate(canvas.width, 0);
         context.scale(-1, 1);
-        
-        // Gambar ulang video ke dalam kanvas yang sudah disesuaikan
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         
-        // Simpan foto dalam string Base64
         dataFotoBase64 = canvas.toDataURL('image/jpeg');
-
         alert(`Berhasil! Data Absen milik [${perangkat}] telah tersimpan di sistem.`);
     }
 
-    // 5. HUBUNGKAN KE GOOGLE SHEETS
+    // HUBUNGKAN KE GOOGLE SHEETS
     function kirimKeGoogleSheets() {
         const perangkat = document.getElementById('perangkat').value;
-        
         if (!dataFotoBase64 || !perangkat) {
             alert("Isi data absen dan klik 'Simpan Data' terlebih dahulu sampai foto terambil!");
             return;
         }
-
         alert("Menghubungkan... Data siap dikirim ke Google Sheets.");
     }
 </script>
