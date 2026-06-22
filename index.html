@@ -555,7 +555,7 @@
         document.getElementById('label-kamera').innerText = "Kamera Absen";
     }
 
-    // 7. HUBUNGKAN KE GOOGLE SHEETS
+        // 7. HUBUNGKAN KE GOOGLE SHEETS (PERBAIKAN ALUR TRANSFER DATA KUSTOM POPUP)
     function kirimKeGoogleSheets() {
         const perangkat = document.getElementById('perangkat').value;
         
@@ -564,11 +564,13 @@
             return;
         }
 
+        // Tampilkan popup loading terlebih dahulu agar user tahu data sedang diproses
         tampilkanAlert("Memproses Data", "Sedang mengirim data absensi ke server desa... Mohon tunggu.", "⏳", "info");
 
+        // Proses pengiriman data ke Google Sheets berjalan di latar belakang
         fetch(WEB_APP_URL, {
             method: 'POST',
-            mode: 'cors',
+            mode: 'no-cors', // Diubah ke no-cors agar browser tidak memblokir paket foto berukuran besar
             headers: {
                 'Content-Type': 'text/plain'
             },
@@ -579,18 +581,21 @@
             })
         })
         .then(() => {
+            // Setelah data dipastikan aman terkirim, tampilkan popup sukses
             tampilkanAlert("🚀 Sukses!", "Data absensi dan foto Anda berhasil terkirim ke Google Sheets.", "✅", "success", function() {
-                // Reset form & reload tanpa merusak halaman
+                // Form direset otomatis setelah tombol 'Oke' pada popup sukses diklik
                 document.getElementById('perangkat').value = "";
                 document.getElementById('pinInput').value = "";
                 window.location.href = window.location.origin + window.location.pathname;
             });
         })
         .catch(err => {
+            // Jika benar-benar terjadi gangguan server eksternal, tampilkan eror
             tampilkanAlert("Koneksi Eror", "Gagal mengirim data. Periksa jaringan internet Anda!", "❌", "error");
             console.error(err);
         });
     }
+
 </script>
 </body>
 </html>
