@@ -1,0 +1,22 @@
+{
+  "name": "Absensi Desa Tanjung Nyiur",
+  "short_name": "Absen Desa",
+  "description": "Aplikasi Absensi Perangkat Desa Tanjung Nyiur",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#e8f5e9",
+  "theme_color": "#2e7d32",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "logo_desa.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo_desa.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
