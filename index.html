@@ -234,7 +234,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: none; /* Sembunyikan di awal */
+            display: none;
         }
 
         #canvas {
@@ -264,7 +264,7 @@
         .btn-ulang {
             background: #f44336;
             color: white;
-            display: none; /* Muncul hanya saat foto sudah terambil */
+            display: none;
         }
         .btn-ulang:hover { background: #d32f2f; }
 
@@ -437,7 +437,7 @@
         // Tampilkan data ke elemen Gambar (Layar Membeku)
         hasilFoto.src = dataFotoBase64;
         hasilFoto.style.display = "block";
-        video.style.display = "none"; // Sembunyikan kamera live
+        video.style.display = "none"; 
 
         // Sesuaikan tombol aksinya
         document.getElementById('btn-potret').style.display = "none";
@@ -449,9 +449,9 @@
 
     // 6. FUNGSI AMBIL ULANG FOTO (NYALAKAN KAMERA KEMBALI)
     function ulangFoto() {
-        dataFotoBase64 = ""; // Reset data lama
+        dataFotoBase64 = ""; 
         hasilFoto.style.display = "none";
-        video.style.display = "block"; // Munculkan kamera live kembali
+        video.style.display = "block"; 
 
         document.getElementById('btn-potret').style.display = "block";
         document.getElementById('btn-ulang-foto').style.display = "none";
@@ -468,36 +468,4 @@
         }
 
         if (WEB_APP_URL === "MASUKKAN_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI") {
-            alert("Eror: Anda belum memasukkan URL Google Apps Script Anda pada kode HTML!");
-            return;
-        }
-
-        alert("Sedang mengirim data absensi ke server desa... Mohon tunggu sebentar.");
-
-        fetch(WEB_APP_URL, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'text/plain'
-            },
-            body: JSON.stringify({
-                perangkat: perangkat,
-                tipe: tipeAbsen,
-                foto: dataFotoBase64
-            })
-        })
-        .then(() => {
-            alert("🚀 Sukses! Data absensi dan foto Anda berhasil terkirim ke Google Sheets.");
-            document.getElementById('perangkat').value = "";
-            document.getElementById('pinInput').value = "";
-            location.reload();
-        })
-        .catch(err => {
-            alert("Gagal mengirim data. Periksa jaringan internet Anda!");
-            console.error(err);
-        });
-    }
-</script>
-
-</body>
-</html>
+            alert("Eror: Anda belum
