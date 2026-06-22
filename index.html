@@ -81,17 +81,26 @@
         }
 
         .logo-desa {
-            width: 100%;
-            height: 100%;
-            background: #ffffff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid var(--hijau-utama);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            object-fit: cover;
-        }
+    width: 100%;
+    height: 100%;
+    background: transparent; /* Ubah ke transparan */
+    border-radius: 0;        /* Ubah ke 0 jika ingin kotak, atau tetap jika ingin bulat */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;            /* Hapus border/garis luar */
+    box-shadow: none;        /* Hapus bayangan agar lebih bersih */
+    object-fit: contain;     /* Memastikan logo tidak terpotong */
+}
+
+/* Opsional: Jika ingin logo terlihat lebih elegan tanpa bingkai */
+.logo-container {
+    width: 120px; /* Ukuran bisa disesuaikan */
+    height: 120px;
+    margin: 0 auto 20px;
+    overflow: hidden;
+}
+
 
         .header h1 {
             font-size: 18px;
