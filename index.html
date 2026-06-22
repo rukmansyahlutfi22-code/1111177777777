@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Absensi Desa Tanjung Nyiur</title>
     
-    <link rel="manifest" href='data:application/manifest+json,{"name":"Absensi Desa Tanjung Nyiur","short_name":"Absen Desa","description":"Aplikasi Absensi Perangkat Desa Tanjung Nyiur","start_url":"./index.html","display":"standalone","background_color":"#e8f5e9","theme_color":"#2e7d32","orientation":"portrait","icons":[{"src":"logo_desa.png","sizes":"192x192","type":"image/png"},{"src":"logo_desa.png","sizes":"512x512","type":"image/png"}]}'>
+    <link rel="manifest" href='data:application/manifest+json,{"name":"Absensi Desa Tanjung Nyiur","short_name":"Absen Desa","description":"Aplikasi Absensi Perangkat Desa","start_url":"./index.html","display":"standalone","background_color":"#e8f5e9","theme_color":"#2e7d32","orientation":"portrait","icons":[{"src":"logo_desa.png","sizes":"192x192","type":"image/png"},{"src":"logo_desa.png","sizes":"512x512","type":"image/png"}]}'>
     <meta name="theme-color" content="#2e7d32">
 
     <style>
@@ -46,7 +46,6 @@
             position: relative;
         }
 
-        /* --- SCREEN LOGIN PIN --- */
         #login-screen {
             text-align: center;
             padding: 20px 10px;
@@ -65,7 +64,6 @@
             color: var(--teks-gelap);
         }
 
-        /* --- SCREEN UTAMA --- */
         #main-app {
             display: none;
         }
@@ -159,7 +157,6 @@
             margin-bottom: 6px;
         }
 
-        /* --- STYLING TOMBOL PEMICU DROPDOWN KUSTOM --- */
         .custom-select-trigger {
             width: 100%;
             padding: 14px;
@@ -264,23 +261,19 @@
             background: var(--hijau-utama);
             color: white;
         }
-        .btn-simpan:hover { background: #225c25; }
 
         .btn-ulang {
             background: #f44336;
             color: white;
             display: none;
         }
-        .btn-ulang:hover { background: #d32f2f; }
 
         .btn-kirim {
             background: #fff;
             color: var(--pink-aksen);
             border: 2px solid var(--pink-aksen);
         }
-        .btn-kirim:hover { background: var(--pink-halus); }
 
-        /* --- STYLING MODAL NOTIFIKASI MODERN --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -348,15 +341,8 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(46,125,50,0.2);
-        }
-        
-        .modal-btn.btn-error {
-            background: #f44336;
-            box-shadow: 0 4px 10px rgba(244,67,54,0.2);
         }
 
-        /* --- STYLING MODAL SELECTION LIST PERANGKAT DESA --- */
         .picker-box {
             background: #ffffff;
             width: 90%;
@@ -415,7 +401,6 @@
         .picker-item:hover, .picker-item.selected {
             background: var(--hijau-utama);
             color: #ffffff;
-            box-shadow: 0 4px 12px rgba(46,125,50,0.2);
         }
 
         .picker-btn-selesai {
@@ -428,23 +413,19 @@
             font-size: 15px;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    
     <div id="login-screen">
         <div class="logo-container">
             <img class="logo-desa" src="logo_desa.png" onerror="this.src='https://via.placeholder.com/90?text=Logo'" alt="Logo Desa">
         </div>
         <h2 style="color: var(--hijau-utama); font-size: 20px;">Akses Terbatas</h2>
         <p style="font-size: 12px; color: #666; margin-top: 5px;">Masukkan PIN Khusus Perangkat Desa</p>
-        
         <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="4" inputmode="numeric">
-        
         <button class="btn-aksi btn-simpan" onclick="cekAkses()">Masuk Aplikasi</button>
     </div>
 
@@ -493,9 +474,7 @@
 
 <div id="pickerModal" class="modal-overlay">
     <div class="picker-box">
-        <div class="picker-header">
-            <div class="picker-title">Pilih Perangkat Desa</div>
-        </div>
+        <div class="picker-header"><div class="picker-title">Pilih Perangkat Desa</div></div>
         <div class="picker-list">
             <div class="picker-item" onclick="pilihPerangkat('Adi Cipta - Kaur Umum')">Adi Cipta - Kaur Umum</div>
             <div class="picker-item" onclick="pilihPerangkat('Ahmad - Kepala Desa')">Ahmad - Kepala Desa</div>
@@ -527,187 +506,97 @@
     const canvas = document.getElementById('canvas');
     const hasilFoto = document.getElementById('hasil-foto');
 
-    function bukaPickerPerangkat() {
-        document.getElementById('pickerModal').classList.add('active');
-    }
-
-    function tutupPickerPerangkat() {
-        document.getElementById('pickerModal').classList.remove('active');
-    }
+    function bukaPickerPerangkat() { document.getElementById('pickerModal').classList.add('active'); }
+    function tutupPickerPerangkat() { document.getElementById('pickerModal').classList.remove('active'); }
 
     function pilihPerangkat(nilai) {
         document.getElementById('perangkat').value = nilai;
         document.getElementById('selectTrigger').innerText = nilai;
-        
         const items = document.querySelectorAll('.picker-item');
-        items.forEach(item => {
-            if(item.innerText === nilai) {
-                item.classList.add('selected');
-            } else {
-                item.classList.remove('selected');
-            }
-        });
+        items.forEach(item => item.classList.toggle('selected', item.innerText === nilai));
     }
 
     function tampilkanAlert(judul, pesan, ikon, tipe, callback = null) {
         document.getElementById('alertTitle').innerText = judul;
         document.getElementById('alertMessage').innerText = pesan;
         document.getElementById('alertIcon').innerText = ikon;
-        
-        const btn = document.getElementById('alertBtn');
-        if (tipe === 'error') {
-            btn.className = "modal-btn btn-error";
-        } else {
-            btn.className = "modal-btn";
-        }
-        
+        document.getElementById('alertBtn').className = "modal-btn" + (tipe === 'error' ? " btn-error" : "");
         callbackSetelahTutup = callback;
         document.getElementById('customAlert').classList.add('active');
     }
 
     function tutupAlert() {
         document.getElementById('customAlert').classList.remove('active');
-        if (callbackSetelahTutup) {
-            callbackSetelahTutup();
-            callbackSetelahTutup = null;
-        }
+        if (callbackSetelahTutup) { callbackSetelahTutup(); callbackSetelahTutup = null; }
     }
 
     function cekAkses() {
-        const inputUser = document.getElementById('pinInput').value;
-        if(inputUser === PIN_RAHASIA) {
+        if(document.getElementById('pinInput').value === PIN_RAHASIA) {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'block';
             aktifkanKamera();
         } else {
-            tampilkanAlert("Akses Ditolak", "PIN yang Anda masukkan salah!", "❌", "error");
+            tampilkanAlert("Akses Ditolak", "PIN salah!", "❌", "error");
             document.getElementById('pinInput').value = "";
         }
     }
 
     function updateWaktu() {
         const sekarang = new Date();
-        const jam = String(sekarang.getHours()).padStart(2, '0');
-        const menit = String(sekarang.getMinutes()).padStart(2, '0');
-        const detik = String(sekarang.getSeconds()).padStart(2, '0');
-        document.getElementById('jam-digital').innerText = jam + ":" + menit + ":" + detik + " WITA";
-
-        const opsi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('tanggal-digital').innerText = sekarang.toLocaleDateString('id-ID', opsi);
+        document.getElementById('jam-digital').innerText = String(sekarang.getHours()).padStart(2, '0') + ":" + String(sekarang.getMinutes()).padStart(2, '0') + ":" + String(sekarang.getSeconds()).padStart(2, '0') + " WITA";
+        document.getElementById('tanggal-digital').innerText = sekarang.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     }
-    setInterval(updateWaktu, 1000);
-    updateWaktu();
+    setInterval(updateWaktu, 1000); updateWaktu();
 
     function aktifkanKamera() {
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
-            .then(stream => {
-                video.srcObject = stream;
-            })
-            .catch(err => {
-                tampilkanAlert("Kamera Gagal", "Pastikan izin kamera aktif!", "📷", "error");
-                console.error(err);
-            });
+            .then(stream => video.srcObject = stream)
+            .catch(() => tampilkanAlert("Kamera Gagal", "Pastikan izin kamera aktif!", "📷", "error"));
     }
 
     function setTipe(tipe) {
         tipeAbsen = tipe;
-        const btnMasuk = document.getElementById('btn-masuk');
-        const btnPulang = document.getElementById('btn-pulang');
-
-        if(tipe === 'Masuk') {
-            btnMasuk.classList.add('active-masuk');
-            btnPulang.classList.remove('active-pulang');
-        } else {
-            btnPulang.classList.add('active-pulang');
-            btnMasuk.classList.remove('active-masuk');
-        }
+        document.getElementById('btn-masuk').classList.toggle('active-masuk', tipe === 'Masuk');
+        document.getElementById('btn-pulang').classList.toggle('active-pulang', tipe !== 'Masuk');
     }
 
     function ambilDanSimpan() {
-        const perangkat = document.getElementById('perangkat').value;
-
-        if (!perangkat) {
-            tampilkanAlert("Data Belum Lengkap", "Silakan pilih Nama Perangkat Desa terlebih dahulu!", "⚠️", "warning");
-            return;
+        if (!document.getElementById('perangkat').value || !tipeAbsen) {
+            tampilkanAlert("Data Belum Lengkap", "Pilih nama dan tipe absen!", "⚠️", "warning"); return;
         }
-        if (!tipeAbsen) {
-            tampilkanAlert("Data Belum Lengkap", "Silakan pilih Tipe Absen!", "⚠️", "warning");
-            return;
-        }
-
         const context = canvas.getContext('2d');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        
-        context.translate(canvas.width, 0);
-        context.scale(-1, 1);
+        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+        context.translate(canvas.width, 0); context.scale(-1, 1);
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        
         dataFotoBase64 = canvas.toDataURL('image/jpeg');
-        
-        hasilFoto.src = dataFotoBase64;
-        hasilFoto.style.display = "block";
-        video.style.display = "none"; 
-
-        document.getElementById('btn-potret').style.display = "none";
-        document.getElementById('btn-ulang-foto').style.display = "block";
-        document.getElementById('label-kamera').innerText = "Hasil Foto Tangkapan (Beku)";
-
-        tampilkanAlert("Foto Berhasil", "Foto berhasil disimpan! Jika sudah pas, klik 'Kirim Data ke Google Sheets'.", "📸", "success");
+        hasilFoto.src = dataFotoBase64; hasilFoto.style.display = "block"; video.style.display = "none";
+        document.getElementById('btn-potret').style.display = "none"; document.getElementById('btn-ulang-foto').style.display = "block";
     }
 
     function ulangFoto() {
-        dataFotoBase64 = ""; 
-        hasilFoto.style.display = "none";
-        video.style.display = "block"; 
-
-        document.getElementById('btn-potret').style.display = "block";
-        document.getElementById('btn-ulang-foto').style.display = "none";
-        document.getElementById('label-kamera').innerText = "Kamera Absen";
+        dataFotoBase64 = ""; hasilFoto.style.display = "none"; video.style.display = "block";
+        document.getElementById('btn-potret').style.display = "block"; document.getElementById('btn-ulang-foto').style.display = "none";
     }
 
     function kirimKeGoogleSheets() {
-        const perangkat = document.getElementById('perangkat').value;
-        
-        if (!dataFotoBase64 || !perangkat) {
-            tampilkanAlert("Gagal Kirim", "Silakan ambil foto terlebih dahulu!", "⚠️", "error");
-            return;
-        }
-
-        tampilkanAlert("Memproses Data", "Sedang mengirim data absensi ke server desa... Mohon tunggu.", "⏳", "info");
-
+        if (!dataFotoBase64) { tampilkanAlert("Gagal Kirim", "Ambil foto dulu!", "⚠️", "error"); return; }
+        tampilkanAlert("Memproses Data", "Sedang mengirim data...", "⏳", "info");
         fetch(WEB_APP_URL, {
-            method: 'POST',
-            mode: 'no-cors', 
-            headers: {
-                'Content-Type': 'text/plain'
-            },
-            body: JSON.stringify({
-                perangkat: perangkat,
-                tipe: tipeAbsen,
-                foto: dataFotoBase64
-            })
+            method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'text/plain'},
+            body: JSON.stringify({ perangkat: document.getElementById('perangkat').value, tipe: tipeAbsen, foto: dataFotoBase64 })
         });
-
-        setTimeout(function() {
-            tampilkanAlert("🚀 Sukses!", "Data absensi dan foto Anda berhasil terkirim ke Google Sheets.", "✅", "success", function() {
-                document.getElementById('perangkat').value = "";
-                document.getElementById('selectTrigger').innerText = "-- Pilih Nama / Jabatan --";
-                document.getElementById('pinInput').value = "";
-                
-                const items = document.querySelectorAll('.picker-item');
-                items.forEach(item => item.classList.remove('selected'));
-
-                window.location.href = window.location.origin + window.location.pathname;
+        setTimeout(() => {
+            tampilkanAlert("🚀 Sukses!", "Data absensi terkirim.", "✅", "success", () => {
+                window.location.reload();
             });
         }, 1500);
     }
 
-    // REGISTRASI SW DINAMIS
+    // REGISTRASI SERVICE WORKER AKTIF
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
             navigator.serviceWorker.register("./sw.js")
-                .then(reg => console.log("SW OK", reg))
+                .then(() => console.log("SW Terpasang"))
                 .catch(err => console.log("SW Gagal", err));
         });
     }
